@@ -100,6 +100,11 @@
 				html=html+'<td>'+nameVar+'=</td><td><input id="inputVar'+nameVar.toUpperCase()+'"></input></td>';
 				html=html+'</tr>';
 			}
+		//VariableResultado
+		html=html+'<tr>';
+		html=html+'<td>Resultado=</td><td><input id="inputVarResultado"></input></td>';
+		html=html+'</tr>';
+		//FinVariableResultado
 		console.log(html);
 		$('#tableVariables').append(html);
 		html='<label>Numero de Paso de Resolucion a Implementar</label>';
@@ -169,9 +174,14 @@
 				console.log("Paso asignada al valor: ");
 				console.log(numStep);
 				html=html+'<tr>';
-				html=html+'<td>Paso Número: '+numStep+'</td><td><input id="inputStep'+numStep.toUpperCase()+'"></input></td><td><input type="button" value="Ejecutar Paso" onclick="ejecutarPaso('+numStep+')"></input></td>';
+				html=html+'<td>Paso Número: '+numStep+'</td><td><input name="inputStep'+numStep.toUpperCase()+'" id="inputStep'+numStep.toUpperCase()+'"></input></td><td><input type="button" value="Ejecutar Paso" onclick="ejecutarPaso('+numStep+')"></input></td>';
 				html=html+'</tr>';
 			}
+		
+		html=html+'<tr>';
+		html=html+'<td>Resultado Final: </td><td><input name="inputStepResultado" id="inputStepResultado"></input></td><td><input type="button" value="Ejecutar Paso" onclick="ejecutarResolucion()"></input></td>';
+		html=html+'</tr>';
+		
 		console.log(html);
 		$('#tableResolutionSteps').append(html);
 		/*html='<label>Numero de Paso de Resolucion a Implementar</label>';
@@ -208,9 +218,28 @@
 		$('#tableActions').append('<tr><td>'+accion+'</tr></td>');
 	}
 	
+	/*function ejecutarPaso(numPaso)
+	{
+		$.postJSON("ejecutarPaso", numPaso,
+				function(data) {
+					alert(data.accion);
+					addTrAction(data.accion);
+				});
+	}*/
+	
 	function ejecutarPaso(numPaso)
 	{
-		
+		$.ajax({  
+		     type : "POST",   
+		     url : "ejecutarPaso",   
+		     data : "step=" + numPaso + "&stepExecution=" +$('#inputStep'+numPaso).val(),
+		     success : function(response) {  
+		      addTrAction(response);   
+		     },  
+		     error : function(e) {  
+		      alert('Error: ' + e);   
+		     }  
+		    });  
 	}
 	
 </script>

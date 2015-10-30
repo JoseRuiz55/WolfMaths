@@ -1,2 +1,7 @@
 .metadata
 RemoteSystemsTempFiles
+Servers
+.classpath
+.project
+.springBeans
+WolfMaths/target/
