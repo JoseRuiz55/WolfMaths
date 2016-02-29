@@ -64,8 +64,8 @@ public class WolframAlphaService {
                 logger.info("Successful query. Pods follow:\n");
                 for (WAPod pod : queryResult.getPods()) {
                 	logger.info(pod.getTitle());
-                	logger.info(WolframAlphaConstants.POD_DECIMAL_APROXIMATION);
-                    if (!pod.isError() && (pod.getTitle().equals(WolframAlphaConstants.POD_DECIMAL_APROXIMATION) || pod.getTitle().equals(WolframAlphaConstants.POD_RESULT) )) {
+                	//logger.info(WolframAlphaConstants.POD_DECIMAL_APROXIMATION);
+                    if (!pod.isError() && (pod.getTitle().equals(WolframAlphaConstants.POD_DECIMAL_APROXIMATION) || pod.getTitle().equals(WolframAlphaConstants.POD_RESULT) || pod.getTitle().equals(WolframAlphaConstants.POD_REAL_SOLUTION) )) {
                         logger.info(pod.getTitle());
                         logger.info("------------");
                         for (WASubpod subpod : pod.getSubpods()) {

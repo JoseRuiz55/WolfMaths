@@ -4,14 +4,21 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Formulario de Creación de Problemas</title>
+<spring:url var="problem_creation_url" value="/resourcesApl/js/wolfmathsProblemCreation.js" />
+<spring:url var="global_functions_url" value="/resourcesApl/js/wolfmathsGlobalFunctions.js" />
+<spring:url value="/expedientes/detalleRiesgo/" var="url_detalleRiesgo"/>
 <script type="text/javascript"
 	src="<c:url value="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" /> "></script>
 <script type="text/javascript"
 	src="<c:url value="https://src.springframework.org/svn/spring-samples/mvc-ajax/trunk/src/main/webapp/resources/json.min.js" /> "></script>
+<script src="${problem_creation_url}"></script>
+<script src="${global_functions_url}"></script>
+
 </head>
 <body>
 	<div id="initialDivTables">
@@ -44,6 +51,7 @@
 							<option value="3">3</option>
 							<option value="4">4</option>
 						</select>
+						<input id="inputNumVariables" name="inputNumVariables" type="hidden" value=""/>
 						<input type="button" onclick="createVariablesTable()" value="Generar Variables"/>
 				</td>
 			</tr>
@@ -66,181 +74,203 @@
 	
 	</table>
 	<br/></div>
+	
+	<div id="divConfirmarCreacionProblema" >
+	</div>
 
 </body>
 <script>
-	function createVariablesTable() {
-		var numVars = $('#selectVariables').val();
-		//alert("Numero de Variables Seleccionadas: " + numVars);
-		createVarsTrs(numVars);
-		addTrAction("Seleccion de "+numVars+" variables para la resolución del problema");
-		/* alert(username);
-		$.postJSON("eliminarUsuario", username.replace("\"", ""),
-				function(data) {
-					alert(data.accion);
-					$('#accionRealizada').text(data.accion);
-					alert(username);
-					document.getElementById('tr' + username).remove();
-				} );*/
+
+	var x;
+	var y;
+	var z;
+	var k;
+	var numVars;
+	var resultado;
+	
+	function readStepExecution(numPaso){
+		var inputStep = $('#inputStep'+numPaso).val();
+		inputStep = replaceSpaces(inputStep);
+		console.log("Sentencia Leida de la ejecución del inputStep"+inputStep);
+		inputStep = getVariablesValueToInputStep(inputStep);
+		console.log("Sentencia despues de la transformación: "+inputStep);
+		var varToAssign = "";
+		varToAssign = getVarToAssign(inputStep);
+		console.log("Variable a asignar el valor: "+varToAssign);
+		if(varToAssign!=""){
+			inputStep = inputStep.split(varToAssign)[1];
+			console.log("inputStep a ejecutar: "+inputStep);
+			executeSentence(varToAssign,inputStep);
+		}else{
+			stepExecution(numPaso);
+		}
+		$('#stepButton'+numPaso).attr("disabled","disabled");
+		if(numPaso==-1){
+			alert("Deja de jugar con el JS");
+		}
+
 	}
 	
-	function createVarsTrs(numVars)
+	//Ejecución una operación que devolverá un valor de una variable
+	function stepExecution(numPaso)
 	{
-		var html = '';
-		//Eliminamos la implementacion anterior en caso de existir
-		$('#tableVariables').empty();
-		for (var i = 0;i<numVars;i++)
-			{
-				console.log("Valor i: ");
-				console.log(i);
-				var nameVar = getNameVar(i);
-				console.log("Letra asignada al valor: ");
-				console.log(nameVar);
-				html=html+'<tr>';
-				html=html+'<td>'+nameVar+'=</td><td><input id="inputVar'+nameVar.toUpperCase()+'"></input></td>';
-				html=html+'</tr>';
-			}
-		//VariableResultado
-		html=html+'<tr>';
-		html=html+'<td>Resultado=</td><td><input id="inputVarResultado"></input></td>';
-		html=html+'</tr>';
-		//FinVariableResultado
-		console.log(html);
-		$('#tableVariables').append(html);
-		html='<label>Numero de Paso de Resolucion a Implementar</label>';
-		html ='<label>'+getSelectButtonResolutionSteps()+'</label>';
-		console.log(html);
-		$('#divEnunciadoVariables').empty();
-		$('#divEnunciadoVariables').append(html);
-		
-		//$(html).appendTo('#trVariables');
-	}
-	
-	function getNameVar(numVar)
-	{
-		switch(parseInt(numVar)) {
-	    case 0:
-	        return "x";
-	        break;
-	    case 1:
-	        return "y";
-	        break;
-	    case 2:
-	        return "z";
-	        break;
-	    case 3:
-	        return "k";
-	        break;
-	    default:
-	        return "ERROR";
-		} 
-	}
-	
-	function getSelectButtonResolutionSteps()
-	{
-		var selectButtonHtml = '';
-		selectButtonHtml = selectButtonHtml+
-		'<select id="selectResolutionSteps" >'+
-		'<option	value="1">1</option>'+
-		'<option value="2">2</option>'+
-		'<option value="3">3</option>'+
-		'<option value="4">4</option>'+
-		'</select><td>'+
-		'<input type="button" onclick="createResolutionStepsTable()" value="Generar Pasos de Resolucion"/></td>';
-		console.log(selectButtonHtml);
-		return selectButtonHtml;
-	}
-	
-	function createResolutionStepsTable()
-	{
-		
-		var numSteps = $('#selectResolutionSteps').val();
-		//alert("Numero de Variables Seleccionadas: " + numVars);
-		createStepsTrs(numSteps);
-		addTrAction("Seleccion de "+numSteps+" pasos para la resolución del problema");
-		
-	}
-	
-	function createStepsTrs(numSteps)
-	{
-		var html = '';
-		//Eliminamos la implementacion anterior en caso de existir
-		$('#tableResolutionSteps').empty();
-		for (var i = 0;i<numSteps;i++)
-			{
-				console.log("Valor i: ");
-				console.log(i);
-				var numStep = getStepsNum(i);
-				console.log("Paso asignada al valor: ");
-				console.log(numStep);
-				html=html+'<tr>';
-				html=html+'<td>Paso Número: '+numStep+'</td><td><input name="inputStep'+numStep.toUpperCase()+'" id="inputStep'+numStep.toUpperCase()+'"></input></td><td><input type="button" value="Ejecutar Paso" onclick="ejecutarPaso('+numStep+')"></input></td>';
-				html=html+'</tr>';
-			}
-		
-		html=html+'<tr>';
-		html=html+'<td>Resultado Final: </td><td><input name="inputStepResultado" id="inputStepResultado"></input></td><td><input type="button" value="Ejecutar Paso" onclick="ejecutarResolucion()"></input></td>';
-		html=html+'</tr>';
-		
-		console.log(html);
-		$('#tableResolutionSteps').append(html);
-		/*html='<label>Numero de Paso de Resolucion a Implementar</label>';
-		html ='<label>'+getSelectButtonResolutionSteps()+'</label>';
-		console.log(html);
-		$('#divEnunciadoVariables').empty();
-		$('#divEnunciadoVariables').append(html);*/
-		//$(html).appendTo('#trVariables');
-	}
-	
-	
-	function getStepsNum(numStep)
-	{
-		switch(parseInt(numStep)) {
-	    case 0:
-	        return "1";
-	        break;
-	    case 1:
-	        return "2";
-	        break;
-	    case 2:
-	        return "3";
-	        break;
-	    case 3:
-	        return "4";
-	        break;
-	    default:
-	        return "ERROR";
-		} 
-	}
-	
-	function addTrAction(accion)
-	{
-		$('#tableActions').append('<tr><td>'+accion+'</tr></td>');
-	}
-	
-	/*function ejecutarPaso(numPaso)
-	{
-		$.postJSON("ejecutarPaso", numPaso,
-				function(data) {
-					alert(data.accion);
-					addTrAction(data.accion);
-				});
-	}*/
-	
-	function ejecutarPaso(numPaso)
-	{
+		console.log("Valor"+$('#inputStep'+numPaso).val());
+		var inputStep = $('#inputStep'+numPaso).val();
+		inputStep = replaceSpaces(inputStep);
 		$.ajax({  
 		     type : "POST",   
-		     url : "ejecutarPaso",   
-		     data : "step=" + numPaso + "&stepExecution=" +$('#inputStep'+numPaso).val(),
+		     url : "ejecutarSentencia",   
+		     data : "&sentenceToExecute=" +inputStep,
 		     success : function(response) {  
-		      addTrAction(response);   
+		      addTrAction(response);
+		      if(response.indexOf(API_RESULT_SEPARATOR) > -1){
+		    	  var varToAssign = "";
+				  varToAssign = getVarToAssign(response);
+				  console.log("Variable a asignar el valor: "+varToAssign);
+				  if(varToAssign!=""){
+					value = response.split(API_RESULT_SEPARATOR)[1].split(varToAssign)[1];
+					value = value.replace("?","");
+					value = parseFloat(value).toFixed(2).toString();
+					assignValueToASingleVar(varToAssign,value);
+					setVariablesValues();
+				  }else{
+					alert("Fallo al ejecutar la lógica");
+				  } 
+		      }
+		       
 		     },  
 		     error : function(e) {  
 		      alert('Error: ' + e);   
 		     }  
 		    });  
 	}
+	
+	//Ejecución que devolvera un resultado y este será asignado a la variable que se le pasa en varToAssign
+	function executeSentence(varToAssign,sentenceToExecute)
+	{
+		console.log("Valor"+sentenceToExecute);
+		sentence = replaceSpaces(sentenceToExecute);
+		$.ajax({  
+		     type : "POST",   
+		     url : "ejecutarSentencia",   
+		     data : "&sentenceToExecute=" +sentence,
+		     success : function(response) {  
+		      if(response.indexOf(API_RESULT_SEPARATOR) > -1){
+		    	  addTrAction(response);
+		    	  result = response.split(API_RESULT_SEPARATOR)[1];
+		    	  result = result.replace("?","");
+		    	  result = parseFloat(result).toFixed(2).toString();
+		    	  console.log("result de executeSentence: "+result);
+				  assignValueToASingleVar(varToAssign,result);
+				  setVariablesValues();
+		      }
+		        
+		     },  
+		     error : function(e) {  
+		      alert('Error: ' + e);   
+		     }  
+		    });  
+	}
+	
+	function ejecutarResolucion(){
+		var inputStep = $('#inputStepResultado').val();
+		inputStep = replaceSpaces(inputStep);
+		console.log("Sentencia Leida de la ejecución del inputStep"+inputStep);
+		inputStep = getVariablesValueToInputStep(inputStep);
+		console.log("Sentencia despues de la transformación: "+inputStep);
+		$.ajax({  
+		     type : "POST",   
+		     url : "ejecutarSentencia",   
+		     data : "&sentenceToExecute=" +inputStep,
+		     success : function(response) {  
+		      addTrAction(response);
+		      if(response.indexOf(API_RESULT_SEPARATOR) > -1){
+		    	  value = response.split(API_RESULT_SEPARATOR)[1];
+		    	  if(value.indexOf('=')>-1){
+		    		  alert("Fallo al ejecutar la lógica");
+		    	  }else{
+		    		  assignValueToResult(value);
+		    		  addButtonSaveProblem();
+		    		  $('#inputStepResultado').attr("disabled","disabled");
+		    	  }
+		    	  
+		    	  /*var varToAssign = "";
+				  varToAssign = getVarToAssign(response);
+				  console.log("Variable a asignar el valor: "+varToAssign);
+				  if(varToAssign!=""){
+					value = response.split(API_RESULT_SEPARATOR)[1].split(varToAssign)[1];
+					assignValueToASingleVar(varToAssign,value);
+					setVariablesValues();
+				  }else{
+					
+				  }*/
+		      }
+		       
+		     },  
+		     error : function(e) {  
+		      alert('Error: ' + e);   
+		     }  
+		    });
+	}
+	
+	function assignValueToResult(res){
+		$('#inputVarResultado').val(res);
+		resultado=$('#inputVarResultado').val();
+	}
+	function addButtonSaveProblem(){
+		$('#divConfirmarCreacionProblema').append('<input type="button" id="saveProblem" onclick="saveProblem()" value="Guardar Problema"></input>');
+	}
+	
+	function saveProblem(){
+		if(confirm("Desea guardar el problema?")){
+		$.ajax({  
+		     type : "POST",   
+		     url : "guardarProblema",
+		     success : function(response) {
+		    	 
+		   	 alert("Problema guardado");
+		     /*addTrAction(response);
+		      if(response.indexOf(API_RESULT_SEPARATOR) > -1){
+		    	  value = response.split(API_RESULT_SEPARATOR)[1];
+		    	  if(value.indexOf('=')>-1){
+		    		  alert("Fallo al ejecutar la lógica");
+		    	  }else{
+		    		  assignValueToResult(value);
+		    		  addButtonSaveProblem();
+		    		  $('#inputStepResultado').attr("disabled","disabled");
+		    	  }
+		    	  
+		    	  /*var varToAssign = "";
+				  varToAssign = getVarToAssign(response);
+				  console.log("Variable a asignar el valor: "+varToAssign);
+				  if(varToAssign!=""){
+					value = response.split(API_RESULT_SEPARATOR)[1].split(varToAssign)[1];
+					assignValueToASingleVar(varToAssign,value);
+					setVariablesValues();
+				  }else{
+					
+				  }*/
+		      }
+		       
+		     },  
+		     error : function(e) {  
+		      alert('Error: ' + e);   
+		     }  
+		    });
+		}else{
+			
+		}
+	}
+	
+	
+	function getValorX(){
+		console.log(x);
+		return x;
+	}
+	
+	
+	
+	
 	
 </script>
 </html>

@@ -11,5 +11,8 @@ public final class WolframAlphaConstants {
 	public static final String POD_CONTINUED_FRACTION = "Continued fraction";
 	public static final String POD_ALTERNATIVE_REPRESENTATION = "Alternative representations";
 	public static final String POD_INTEGRAL_REPRESENTATIONS = "Integral representations";
+	public static final String POD_REAL_SOLUTION = "Real solution";
+	public static final String POD_REAL_ROOT = "Real root";
 	public static final String POD_RESULT = "Result";
+	public static final String MORE_OR_LESS = "≈";
 }
