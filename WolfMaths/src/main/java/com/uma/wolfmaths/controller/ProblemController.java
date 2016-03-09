@@ -71,7 +71,7 @@ public class ProblemController {
 		problemForm.setHayStepsSel(false);
 		problemForm.setReadyToSaveProblem(false);
 		problemForm.setAction("VARSSELECCIONADAS");
-		List <WomaAlumno> lista = null;
+		List<WomaAlumno> lista = null;
 		try{
 		lista = woma.findAll();
 		}catch (Exception e){

@@ -5,6 +5,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.uma.wolfmaths.dao.*;
@@ -13,42 +15,42 @@ import com.uma.wolfmaths.entity.*;
 import com.uma.wolfmaths.utils.Mapper;
 
 
-@Service
+@Component("wolfMathsService")
 public class WolfMathsService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(WolfMathsService.class);
 	
 	@Autowired
-	protected static WomaAlumAsigFacade womaAlumAsigFacade;
+	protected WomaAlumAsigFacade womaAlumAsigFacade;
 	
 	@Autowired
-	protected static WomaAlumnoFacade womaAlumnoFacade;
+	protected WomaAlumnoFacade womaAlumnoFacade;
 	
 	@Autowired
-	protected static WomaAsignaturaFacade womaAsignaturaFacade;
+	protected WomaAsignaturaFacade womaAsignaturaFacade;
 	
 	@Autowired
-	protected static WomaIntentoProblemaFacade womaIntentoProblemaFacade;
+	protected WomaIntentoProblemaFacade womaIntentoProblemaFacade;
 	
 	@Autowired
-	protected static WomaPasoResolucionProblemaFacade womaPasoResolucionProblemaFacade;
+	protected WomaPasoResolucionProblemaFacade womaPasoResolucionProblemaFacade;
 	
 	@Autowired
-	protected static WomaProblemaFacade womaProblemaFacade;
+	protected WomaProblemaFacade womaProblemaFacade;
 
 	@Autowired
-	protected static WomaProfAsigFacade womaProfAsigacade;
+	protected WomaProfAsigFacade womaProfAsigacade;
 	
 	@Autowired
-	protected static WomaProfesorFacade womaProfesorFacade;
+	protected WomaProfesorFacade womaProfesorFacade;
 	
 	@Autowired
-	protected static WomaSolucionProblemaFacade womaSolcionProblemaFacade;
+	protected WomaSolucionProblemaFacade womaSolcionProblemaFacade;
 	
 	@Autowired
-	protected static WomaVariablesProblemaFacade womaVariablesProblemaFacade;
+	protected WomaVariablesProblemaFacade womaVariablesProblemaFacade;
 	
-	public static void createProblem(Problem problem, Subject asignatura, Professor professor){
+	public void createProblem(Problem problem, Subject asignatura, Professor professor){
 		try{
 		List <WomaAlumno> lista = null;
 		try{
@@ -62,7 +64,7 @@ public class WolfMathsService {
 		
 		WomaProblema womaProblema = Mapper.mapProblemDtoToWomaProblema(problem);
 		womaProblema = Mapper.setFKsToWomaProblema(womaProblema, womaAsignatura, womaProfesor);
-		
+		//womaProblema.setIdProb(1);
 		
 		womaProblemaFacade.create(womaProblema);
 		}

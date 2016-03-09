@@ -8,10 +8,13 @@ package com.uma.wolfmaths.dao;
 import java.util.List;
 import javax.persistence.EntityManager;
 
+import org.springframework.transaction.annotation.Transactional;
+
 /**
  *
  * @author jruiz
  */
+
 public abstract class AbstractFacade<T> {
 
     private Class<T> entityClass;
@@ -21,15 +24,15 @@ public abstract class AbstractFacade<T> {
     }
 
     protected abstract EntityManager getEntityManager();
-
+    @Transactional
     public void create(T entity) {
         getEntityManager().persist(entity);
     }
-
+    @Transactional
     public void edit(T entity) {
         getEntityManager().merge(entity);
     }
-
+    @Transactional
     public void remove(T entity) {
         getEntityManager().remove(getEntityManager().merge(entity));
     }

@@ -49,6 +49,9 @@ public class ProblemRestController {
 	@Autowired
 	private WomaAlumnoFacade woma;
 	
+	@Autowired
+	private WolfMathsService wolfMathsService;
+	
 	@RequestMapping(value = "/guardarProblemaJSON", method = {RequestMethod.GET, RequestMethod.POST})
 	@ResponseBody
 	public String guardarProblemaJSON(@RequestBody final String problemJSON) {
@@ -110,7 +113,7 @@ public class ProblemRestController {
 			
 			logger.info("Paso Resultado: "+problem.getSteps().getFinalStep().getStep());
 			logger.info("Valor Resultado: "+problem.getResult());
-			WolfMathsService.createProblem(problem, null, null);
+			wolfMathsService.createProblem(problem, null, null);
 			return "OK";
 		}catch(Exception e){
 			return "NOTOK";

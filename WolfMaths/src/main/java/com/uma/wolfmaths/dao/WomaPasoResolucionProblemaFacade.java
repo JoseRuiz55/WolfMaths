@@ -6,11 +6,9 @@
 package com.uma.wolfmaths.dao;
 
 import com.uma.wolfmaths.entity.WomaPasoResolucionProblema;
-
+import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-
-import org.springframework.stereotype.Service;
 
 /**
  *

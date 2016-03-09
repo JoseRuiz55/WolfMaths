@@ -9,6 +9,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -28,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "WomaPasoResolucionProblema.findAll", query = "SELECT w FROM WomaPasoResolucionProblema w"),
-    @NamedQuery(name = "WomaPasoResolucionProblema.findById", query = "SELECT w FROM WomaPasoResolucionProblema w WHERE w.id = :id"),
+    @NamedQuery(name = "WomaPasoResolucionProblema.findByIdPasoResoProb", query = "SELECT w FROM WomaPasoResolucionProblema w WHERE w.idPasoResoProb = :idPasoResoProb"),
     @NamedQuery(name = "WomaPasoResolucionProblema.findByNumPaso", query = "SELECT w FROM WomaPasoResolucionProblema w WHERE w.numPaso = :numPaso"),
     @NamedQuery(name = "WomaPasoResolucionProblema.findByPasoSentencia", query = "SELECT w FROM WomaPasoResolucionProblema w WHERE w.pasoSentencia = :pasoSentencia"),
     @NamedQuery(name = "WomaPasoResolucionProblema.findByComentario", query = "SELECT w FROM WomaPasoResolucionProblema w WHERE w.comentario = :comentario"),
@@ -37,10 +39,10 @@ public class WomaPasoResolucionProblema implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
-    @Column(name = "ID")
-    private Integer id;
+    @Column(name = "ID_PASO_RESO_PROB")
+    private Integer idPasoResoProb;
     @Basic(optional = false)
     @NotNull
     @Column(name = "NUM_PASO")
@@ -51,8 +53,7 @@ public class WomaPasoResolucionProblema implements Serializable {
     @Column(name = "PASO_SENTENCIA")
     private String pasoSentencia;
     @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 2000)
+    @Size(max = 2000)
     @Column(name = "COMENTARIO")
     private String comentario;
     @Size(max = 1)
@@ -65,23 +66,23 @@ public class WomaPasoResolucionProblema implements Serializable {
     public WomaPasoResolucionProblema() {
     }
 
-    public WomaPasoResolucionProblema(Integer id) {
-        this.id = id;
+    public WomaPasoResolucionProblema(Integer idPasoResoProb) {
+        this.idPasoResoProb = idPasoResoProb;
     }
 
-    public WomaPasoResolucionProblema(Integer id, int numPaso, String pasoSentencia, String comentario) {
-        this.id = id;
+    public WomaPasoResolucionProblema(Integer idPasoResoProb, int numPaso, String pasoSentencia, String comentario) {
+        this.idPasoResoProb = idPasoResoProb;
         this.numPaso = numPaso;
         this.pasoSentencia = pasoSentencia;
         this.comentario = comentario;
     }
 
-    public Integer getId() {
-        return id;
+    public Integer getIdPasoResoProb() {
+        return idPasoResoProb;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIdPasoResoProb(Integer idPasoResoProb) {
+        this.idPasoResoProb = idPasoResoProb;
     }
 
     public int getNumPaso() {
@@ -127,7 +128,7 @@ public class WomaPasoResolucionProblema implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += (idPasoResoProb != null ? idPasoResoProb.hashCode() : 0);
         return hash;
     }
 
@@ -138,7 +139,7 @@ public class WomaPasoResolucionProblema implements Serializable {
             return false;
         }
         WomaPasoResolucionProblema other = (WomaPasoResolucionProblema) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if ((this.idPasoResoProb == null && other.idPasoResoProb != null) || (this.idPasoResoProb != null && !this.idPasoResoProb.equals(other.idPasoResoProb))) {
             return false;
         }
         return true;
@@ -146,7 +147,7 @@ public class WomaPasoResolucionProblema implements Serializable {
 
     @Override
     public String toString() {
-        return "com.uma.wolfmaths.entity.WomaPasoResolucionProblema[ id=" + id + " ]";
+        return "com.uma.wolfmaths.entity.WomaPasoResolucionProblema[ idPasoResoProb=" + idPasoResoProb + " ]";
     }
     
 }
