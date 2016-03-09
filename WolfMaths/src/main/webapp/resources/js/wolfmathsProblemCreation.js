@@ -7,8 +7,9 @@ function createVariablesTable() {
 		$('#inputNumVariables').val(numVars);
 		//alert("Numero de Variables Seleccionadas: " + numVars);
 		console.log("NumVars"+numVars);
-		createVarsTrs(numVars);
+		//createVarsTrs(numVars);
 		addTrAction("Seleccion de "+numVars+" variables para la resoluci&oacute;n del problema");
+		document.getElementById("newProblemForm").submit();
 		/* alert(username);
 		$.postJSON("eliminarUsuario", username.replace("\"", ""),
 				function(data) {
@@ -32,12 +33,12 @@ function createVariablesTable() {
 				console.log("Letra asignada al valor: ");
 				console.log(nameVar);
 				html=html+'<tr>';
-				html=html+'<td>'+nameVar+'=</td><td><input id="inputInitialVar'+nameVar.toUpperCase()+' name="inputInitialVar'+nameVar.toUpperCase()+'"></input></td><td><input id="inputVar'+nameVar.toUpperCase()+'" name="inputVar'+nameVar.toUpperCase()+'" readonly></input></td>';
+				html=html+'<td>'+nameVar+'=</td><td><input id="inputInitialVar'+nameVar.toUpperCase()+'" name="inputInitialVar'+nameVar.toUpperCase()+' path="problem.variables.'+nameVar.toLowerCase()+'"></input></td><td><input id="inputVar'+nameVar.toUpperCase()+'" name="inputVar'+nameVar.toUpperCase()+'" readonly></input></td>';
 				html=html+'</tr>';
 			}
 		//VariableResultado
 		html=html+'<tr>';
-		html=html+'<td>Resultado=</td><td><input id="inputVarResultado" name="inputVarResultado" readonly></input></td>';
+		html=html+'<td>Resultado=</td><td><input id="inputVarResultado" name="inputVarResultado" path="problem.result" readonly></input></td>';
 		html=html+'</tr>';
 		//FinVariableResultado
 		console.log(html);
@@ -64,12 +65,12 @@ function createVariablesTable() {
 				console.log("Paso asignada al valor: ");
 				console.log(numStep);
 				html=html+'<tr>';
-				html=html+'<td>Paso N&uacute;mero: '+numStep+'</td><td><input id="inputStep'+numStep.toUpperCase()+'" name="inputStep'+numStep.toUpperCase()+'"></input></td><td><input type="button" id="stepButton'+numStep+'" value="Ejecutar Paso" onclick="readStepExecution('+numStep+')"></input></td>';
+				html=html+'<td>Paso N&uacute;mero: '+numStep+'</td><td><input id="inputStep'+numStep.toUpperCase()+'" name="inputStep'+numStep.toUpperCase()+'" path="problem.steps.step'+numStep.toUpperCase()+'.step"></input></td><td><input type="button" id="stepButton'+numStep+'" value="Ejecutar Paso" onclick="readStepExecution('+numStep+')"></input></td>';
 				html=html+'</tr>';
 			}
 		
 		html=html+'<tr>';
-		html=html+'<td>Resultado Final: </td><td><input id="inputStepResultado" name="inputStepResultado"></input></td><td><input id="resolutionButton" type="button" value="Ejecutar Resolucion" onclick="ejecutarResolucion()"></input></td>';
+		html=html+'<td>Resolución Final: </td><td><input id="inputStepResultado" name="inputStepResultado" path="problem.steps.finalStep.step"></input></td><td><input id="resolutionButton" type="button" value="Ejecutar Resolucion" onclick="ejecutarResolucion()"></input></td>';
 		html=html+'</tr>';
 		
 		console.log(html);
@@ -90,9 +91,11 @@ function createVariablesTable() {
 		var numSteps = $('#selectResolutionSteps').val();
 		//Asignamos el numero de pasos a resolver
 		$('#inputResolutionSteps').val($('#selectResolutionSteps').val());
+		
 		//alert("Numero de Variables Seleccionadas: " + numVars);
-		createStepsTrs(numSteps);
+		//createStepsTrs(numSteps);
 		addTrAction("Seleccion de "+numSteps+" pasos para la resoluci&oacute;n del problema");
+		document.getElementById("newProblemForm").submit();
 		
 	}
 	
@@ -143,13 +146,13 @@ function createVariablesTable() {
 	{
 		var selectButtonHtml = '';
 		selectButtonHtml = selectButtonHtml+
-		'<select id="selectResolutionSteps" >'+
+		'<form:select id="selectResolutionSteps" name="selectResolutionSteps" path="problem.numSteps">'+
 		'<option	value="1">1</option>'+
 		'<option value="2">2</option>'+
 		'<option value="3">3</option>'+
 		'<option value="4">4</option>'+
-		'</select><td>'+
-		'<input id="inputResolutionSteps" name="inputResolutionSteps" type="hidden" value=""/>';+
+		'</form:select><td>'+
+		'<input id="inputResolutionSteps" name="inputResolutionSteps" type="hidden" value=""/>'+
 		'<input type="button" onclick="createResolutionStepsTable()" value="Generar Pasos de Resolucion"/></td>';
 		console.log(selectButtonHtml);
 		return selectButtonHtml;
@@ -189,9 +192,6 @@ function createVariablesTable() {
 	function setInitialToVariablesValues(){
 		console.log("NumVars"+numVars);
 		switch(parseInt(numVars)) {
-	    case 0:
-	        return alert("Error, deja de tocar el javascript");
-	        break;
 	    case 1:
 	    	x = replaceSpaces($('#inputInitialVarX').val());
 	    	$('#inputVarX').val($('#inputInitialVarX').val());
@@ -360,6 +360,7 @@ function createVariablesTable() {
 			$('#inputVarK').val(valueToAssign);
 		}
 		else{
+			alert("ERROR en assigValueToASingleVar");
 			console.log("ERROR en assigValueToASingleVar");
 		}
 		

@@ -11,4 +11,5 @@ public final class WolfmathsConstants {
 	public static final String APP_VARIABLE_Y = "varY";
 	public static final String APP_VARIABLE_Z = "varZ";
 	public static final String APP_VARIABLE_K = "varK";
+	public static final Integer MAX_STUDENT_SUBJECT = 20;
 }
