@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,7 +37,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "WomaProblema.findAll", query = "SELECT w FROM WomaProblema w"),
     @NamedQuery(name = "WomaProblema.findByIdProb", query = "SELECT w FROM WomaProblema w WHERE w.idProb = :idProb"),
     @NamedQuery(name = "WomaProblema.findByEnunciado", query = "SELECT w FROM WomaProblema w WHERE w.enunciado = :enunciado"),
-    @NamedQuery(name = "WomaProblema.findByNumVariables", query = "SELECT w FROM WomaProblema w WHERE w.numVariables = :numVariables")})
+    @NamedQuery(name = "WomaProblema.findByNumVariables", query = "SELECT w FROM WomaProblema w WHERE w.numVariables = :numVariables"),
+    @NamedQuery(name = "WomaProblema.findByWomaAsignaturaId", query = "SELECT w FROM WomaProblema w WHERE w.womaAsignaturaId.idAsig = :idAsignatura"),
+    @NamedQuery(name = "WomaProblema.findByWomaProfesorId", query = "SELECT w FROM WomaProblema w WHERE w.womaProfesorId.idProf = :idProfesor")})
 public class WomaProblema implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,7 +62,7 @@ public class WomaProblema implements Serializable {
     @JoinColumn(name = "WOMA_PROFESOR_ID", referencedColumnName = "ID_PROF")
     @ManyToOne(optional = false)
     private WomaProfesor womaProfesorId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaProblemaId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaProblemaId")
     private List<WomaSolucionProblema> womaSolucionProblemaList;
 
     public WomaProblema() {

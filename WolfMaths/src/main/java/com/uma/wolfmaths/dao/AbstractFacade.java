@@ -10,6 +10,8 @@ import javax.persistence.EntityManager;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import com.uma.wolfmaths.entity.WomaAlumno;
+
 /**
  *
  * @author jruiz
@@ -36,7 +38,7 @@ public abstract class AbstractFacade<T> {
     public void remove(T entity) {
         getEntityManager().remove(getEntityManager().merge(entity));
     }
-
+    @Transactional
     public T find(Object id) {
         return getEntityManager().find(entityClass, id);
     }

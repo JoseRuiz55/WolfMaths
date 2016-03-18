@@ -6,19 +6,21 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page session="true" %>
 <html>
+<jsp:include page="/WEB-INF/views/header.jsp" />
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Formulario de Creación de Problemas</title>
-<spring:url var="problem_creation_url" value="/resourcesApl/js/wolfmathsProblemCreation.js" />
-<spring:url var="global_functions_url" value="/resourcesApl/js/wolfmathsGlobalFunctions.js" />
 
 <spring:url value="/problem/createProblemForm" var="url_newProblem"/>
 <spring:url value="/problem/selVarsNumber" var="url_selVarsNumber"/>
 <spring:url value="/problem/selStepsNumber" var="url_selStepsNumber"/>
 <spring:url value="/problem/readyToSaveProblem" var="url_readyToSaveProblem"/>
 <spring:url value="/problem/guardarProblema" var="url_guardarProblema"/>
+<spring:url value="/problem/resolverProblema" var="url_resolverProblema"/>
 <spring:url value="/problemRest/guardarProblemaJSON" var="url_guardarProblemaJSON"/>
+<spring:url value="/problemRest/resolverProblemaJSON" var="url_resolverProblemaJSON"/>
 
 <c:set var="INICIO" value="INICIO"/>
 <c:set var="VARSSELECCIONADAS" value="VARSSELECCIONADAS"/>
@@ -48,12 +50,17 @@
 	<c:set var="readOnlyVarsClass" value="readonlyVars"/>
 </c:if>
 
-<script type="text/javascript"
-	src="<c:url value="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" /> "></script>
-<script type="text/javascript"
-	src="<c:url value="https://src.springframework.org/svn/spring-samples/mvc-ajax/trunk/src/main/webapp/resources/json.min.js" /> "></script>
-<script src="${problem_creation_url}"></script>
-<script src="${global_functions_url}"></script>
+<c:if test="${problemForm.action eq READYTORESOLVEPROBLEM}">
+	<c:set var="urlActionProblemForm" value="${url_resolverProblema}" />
+	<c:set var="readOnlyVars" value="true"/>
+	<c:set var="readOnlyVarsClass" value="readonlyVars"/>
+</c:if>
+
+<c:if test="${problemForm.action eq READYTOGRADEPROBLEM}">
+	<c:set var="urlActionProblemForm" value="${url_resolverProblema}" />
+	<c:set var="readOnlyVars" value="true"/>
+	<c:set var="readOnlyVarsClass" value="readonlyVars"/>
+</c:if>
 
 </head>
 <body>
@@ -62,6 +69,8 @@
 	<form:input type="hidden" path="action" value="${problemForm.action}"/>
 	<form:input type="hidden" path="hayVarsSel" value="${problemForm.hayVarsSel}"/>
 	<form:input type="hidden" path="hayStepsSel" value="${problemForm.hayStepsSel}"/>
+	<form:input type="hidden" path="problem.idProblemResolucion" value="${problemForm.problem.idProblemResolucion}"/>
+	<!-- <form:input type="hidden" path="problem.profesor" value="${problemForm.problem.profesor}"/>-->
 	<div id="initialDivTables">
 		<table id="tableProblem" style="height:200px;width:45%;float:left;">
 			<tr>
@@ -152,12 +161,19 @@
 					<tr>
 						<td>Paso Número ${loopSteps.index+1}: </td>
 						<td><form:input id="inputStep${loopSteps.index+1}" name="inputStep${loopSteps.index+1}" path="problem.steps.step${loopSteps.index+1}.step"></form:input></td>
+						<c:if test="${not problemForm.readyToGradeProblem}">
 						<td><input type="button" id="stepButton${loopSteps.index+1}" value="Ejecutar Paso" onclick="readStepExecution(${loopSteps.index+1})"></input></td>
+						</c:if>
 					</tr>
 				</c:forEach>
 				<tr>
 				<td>Resolución Final: </td><td><form:input id="inputStepResultado" name="inputStepResultado" path="problem.steps.finalStep.step"></form:input></td>
-				<td><input id="resolutionButton" type="button" value="Ejecutar Resolucion" onclick="ejecutarResolucion()"></input></td>
+				<td>
+				<c:if test="${not problemForm.readyToGradeProblem}">
+				<input id="resolutionButton" type="button" value="Ejecutar Resolucion" onclick="ejecutarResolucion()"></input>
+				</c:if>
+				</td>
+				
 				</tr>
 			</table>
 			<br/>
@@ -166,6 +182,19 @@
 	<div id="divConfirmarCreacionProblema" >
 	<c:if test="${problemForm.readyToSaveProblem}">
 		<input type="button" id="saveProblem" onclick="saveProblemSubmitJSON()" value="Guardar Problema"></input>
+	</c:if>
+	</div>
+	
+	<div id="divConfirmarResolucionProblema" >
+	<c:if test="${problemForm.readyToResolveProblem}">
+		<input type="button" id="resolveProblem" onclick="resolveProblemSubmitJSON()" value="Resolver Problema"></input>
+	</c:if>
+	</div>
+	<div id="divNotaProblema" >
+	<c:if test="${problemForm.readyToGradeProblem}">
+		<input id="idNotaInput" name="idNotaInput"></input>
+		<input id="idComentarioNotaInput" name="idComentarioNotaInput"></input>
+		<input type="button" id="saveProblem" onclick="gradeProblemSubmitJSON()" value="Corregir Problema"></input>
 	</c:if>
 	</div>
 	</form:form>
@@ -338,6 +367,24 @@
 		}
 	}
 	
+	function resolveProblemSubmitJSON(){
+		if(confirm("Desea guardar la resolucion del problema?")){
+			resolveProblemJSON();
+		}
+		else{
+			
+		}
+	}
+	
+	function gradeProblemSubmitJSON(){
+		if(confirm("Desea corregir el problema asignandole la nota?")){
+			gradeProblemJSON();
+		}
+		else{
+			
+		}
+	}
+	
 	function saveProblemJSON(){
 		$.ajax({  
 		     type : "POST",   
@@ -347,6 +394,47 @@
 		     success : function(response) {
 		    	 
 		   	 alert("Problema guardado");
+		       
+		     },  
+		     error : function(e) {  
+		      alert('Error: ' + e);   
+		     }  
+		    });
+	}
+	
+	function resolveProblemJSON(){
+		$.ajax({  
+		     type : "POST",   
+		     url : "/wolfmaths/problemRest/resolverProblemaJSON",
+		     data : JSON.stringify(${problemForm.problem}),
+		     contentType: "application/json",
+		     success : function(response) {
+		    	 
+		   	 alert("Problema resuelto");
+		       
+		     },  
+		     error : function(e) {  
+		      alert('Error: ' + e);   
+		     }  
+		    });
+	}
+	
+	function gradeProblemJSON(){
+		$.ajax({  
+		     type : "POST",   
+		     url : "/wolfmaths/problemRest/evaluarProblemaJSON",
+		     data : "{'idProblemResolucion':'"+${problemForm.problem.idProblemResolucion}+"','nota':'"+$('#idNotaInput').val()+"','comentario':'"+$('#idComentarioNotaInput').val()+"'}",
+		     contentType: "application/json",
+		     success : function(response) {
+		    	 
+		   	 alert("Problema Evaluado");
+		   	 $.ajax({
+		            type: "GET",
+		            url: "/wolfmaths/profesor/obtenerResolucionesAlumnosProblema/"+${problemForm.problem.idProblemResolucion},
+		            success: function( response ){
+		                //do something
+		            }
+		        });
 		       
 		     },  
 		     error : function(e) {  

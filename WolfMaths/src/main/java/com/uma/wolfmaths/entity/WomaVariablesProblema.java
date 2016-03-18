@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -72,7 +73,7 @@ public class WomaVariablesProblema implements Serializable {
     @Size(max = 45)
     @Column(name = "K_FINAL")
     private String kFinal;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaVariablesProblemaId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaVariablesProblemaId")
     private List<WomaIntentoProblema> womaIntentoProblemaList;
 
     public WomaVariablesProblema() {

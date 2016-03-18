@@ -17,6 +17,11 @@ public class VariablesNumberOptionsForm {
 	public void setOpcionesSelect(Map<Integer, Integer> opcionesSelect) {
 		this.opcionesSelect = opcionesSelect;
 	}
+
+	@Override
+	public String toString() {
+		return "VariablesNumberOptionsForm [opcionesSelect=" + opcionesSelect + "]";
+	}
 	
 	
 

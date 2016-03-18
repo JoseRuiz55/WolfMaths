@@ -11,11 +11,20 @@ public class Problem {
 	private double result;
 	private int numVars;
 	private int numSteps;
+	private String comment;
+	private Profesor profesor;
+	private Alumno alumno;
+	private Asignatura asignatura;
+	private String idProblemResolucion = "";
 	
 	public Problem(){
 		this.statement = "";
 		this.steps = new ProblemSteps();
 		this.variables = new ProblemVariables();
+		this.profesor = new Profesor();
+		this.alumno = new Alumno();
+		this.asignatura = new Asignatura();
+		this.idProblemResolucion = "";
 	}
 
 	public String getStatement() {
@@ -64,6 +73,45 @@ public class Problem {
 
 	public void setNumSteps(int numSteps) {
 		this.numSteps = numSteps;
+	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
+	public Profesor getProfesor() {
+		return profesor;
+	}
+
+	public void setProfesor(Profesor profesor) {
+		this.profesor = profesor;
+	}
+
+	public Alumno getAlumno() {
+		return alumno;
+	}
+
+	public void setAlumno(Alumno alumno) {
+		this.alumno = alumno;
+	}
+
+	public Asignatura getAsignatura() {
+		return asignatura;
+	}
+
+	public void setAsignatura(Asignatura asignatura) {
+		this.asignatura = asignatura;
+	}
+	
+
+	public String getIdProblemResolucion() {
+		return idProblemResolucion;
+	}
+
+	public void setIdProblemResolucion(String idProblemResolucion) {
+		this.idProblemResolucion = idProblemResolucion;
 	}
 
 	@Override

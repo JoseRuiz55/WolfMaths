@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -51,11 +52,11 @@ public class WomaAsignatura implements Serializable {
     private String departamento;
     @Column(name = "NUM_MAX_ALUM")
     private Integer numMaxAlum;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaAsignaturaId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaAsignaturaId")
     private List<WomaProblema> womaProblemaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaAsignaturaId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaAsignaturaId")
     private List<WomaProfAsig> womaProfAsigList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaAsignaturaId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaAsignaturaId")
     private List<WomaAlumAsig> womaAlumAsigList;
 
     public WomaAsignatura() {

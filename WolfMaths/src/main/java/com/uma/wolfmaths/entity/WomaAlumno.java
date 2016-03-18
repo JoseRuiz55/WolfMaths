@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,7 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "WomaAlumno.findByUsername", query = "SELECT w FROM WomaAlumno w WHERE w.username = :username"),
     @NamedQuery(name = "WomaAlumno.findByPassword", query = "SELECT w FROM WomaAlumno w WHERE w.password = :password"),
     @NamedQuery(name = "WomaAlumno.findByEmail", query = "SELECT w FROM WomaAlumno w WHERE w.email = :email"),
-    @NamedQuery(name = "WomaAlumno.findByTelefono", query = "SELECT w FROM WomaAlumno w WHERE w.telefono = :telefono")})
+    @NamedQuery(name = "WomaAlumno.findByTelefono", query = "SELECT w FROM WomaAlumno w WHERE w.telefono = :telefono"),
+    @NamedQuery(name = "WomaAlumno.findByUsernameAndPassword", query = "SELECT w FROM WomaAlumno w WHERE w.username = :username and w.password = :password")})
 public class WomaAlumno implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,6 +59,7 @@ public class WomaAlumno implements Serializable {
     @Column(name = "APELLIDO2")
     private String apellido2;
     @Size(max = 20)
+    @Basic(optional = false)
     @Column(name = "USERNAME")
     private String username;
     @Size(max = 20)
@@ -69,9 +72,9 @@ public class WomaAlumno implements Serializable {
     @Size(max = 12)
     @Column(name = "TELEFONO")
     private String telefono;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaAlumnoId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaAlumnoId")
     private List<WomaSolucionProblema> womaSolucionProblemaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaAlumnoId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaAlumnoId")
     private List<WomaAlumAsig> womaAlumAsigList;
 
     public WomaAlumno() {

@@ -34,7 +34,10 @@ import com.uma.wolfmaths.constants.WolfmathsConstants;
 import com.uma.wolfmaths.constants.WolframAlphaConstants;
 import com.uma.wolfmaths.dao.WomaAlumAsigFacade;
 import com.uma.wolfmaths.dao.WomaAlumnoFacade;
+import com.uma.wolfmaths.dto.Alumno;
+import com.uma.wolfmaths.dto.NotaProblemRest;
 import com.uma.wolfmaths.dto.Problem;
+import com.uma.wolfmaths.dto.Profesor;
 import com.uma.wolfmaths.entity.WomaAlumno;
 import com.uma.wolfmaths.form.ProblemForm;
 import com.uma.wolfmaths.service.WolfMathsService;
@@ -113,23 +116,90 @@ public class ProblemRestController {
 			
 			logger.info("Paso Resultado: "+problem.getSteps().getFinalStep().getStep());
 			logger.info("Valor Resultado: "+problem.getResult());
-			wolfMathsService.createProblem(problem, null, null);
+			Profesor profesor = problem.getProfesor();
+			wolfMathsService.createProblem(problem, null, profesor);
 			return "OK";
 		}catch(Exception e){
 			return "NOTOK";
 		}
-		/*sentenceToExecute = sentenceToExecute.replace(' ', '+');
-		String wolframStepExecution = sentenceToExecute;
-		logger.info("Sentencia a ejecutar leida: "+wolframStepExecution);
+	}
+	
+	@RequestMapping(value = "/resolverProblemaJSON", method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public String resolverProblemaJSON(@RequestBody final String problemJSON) {
+		String result = "";
+		Problem problem = new Problem();
+		
+		ObjectMapper objectMapper = new ObjectMapper();
 		try{
-			result = WolframAlphaService.getWolframResult(wolframStepExecution);
+		problem = objectMapper.readValue(problemJSON, Problem.class);
+		}catch(JsonParseException jpe){
 			
-		}catch (Exception e)
-		{
-			logger.info(e.getMessage());
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		logger.info("El resultado de la invocación de la API es: "+WolfmathsConstants.API_RESULT_SEPARATOR+replaceMoreOrLess(result));
-		return "El resultado de la invocación de la API es: "+WolfmathsConstants.API_RESULT_SEPARATOR+replaceMoreOrLess(result);*/
+		logger.info("Entrando en al ejecución de la sentencia");
+		try{
+			double x;
+			double y;
+			double z;
+			double k;
+			int numVars;
+			int numSteps;
+			double resultado;
+			
+			logger.info("Valor Numero Variables: "+problem.getNumVars());
+			logger.info("Valor Inicial X: "+problem.getVariables().getX());
+			logger.info("Valor Inicial X: "+problem.getVariables().getY());
+			logger.info("Valor Inicial X: "+problem.getVariables().getZ());
+			logger.info("Valor Inicial X: "+problem.getVariables().getK());
+			
+			logger.info("Valor Numero de Pasos: "+problem.getNumSteps());
+			logger.info("Sentencia Paso 1: "+problem.getSteps().getStep1().getStep());
+			logger.info("Sentencia Paso 2: "+problem.getSteps().getStep2().getStep());
+			logger.info("Sentencia Paso 3: "+problem.getSteps().getStep3().getStep());
+			logger.info("Sentencia Paso 4: "+problem.getSteps().getStep4().getStep());
+			
+			logger.info("Paso Resultado: "+problem.getSteps().getFinalStep().getStep());
+			logger.info("Valor Resultado: "+problem.getResult());
+			Alumno alumno = problem.getAlumno();
+			wolfMathsService.resolveProblem(problem, null, alumno);
+			return "OK";
+		}catch(Exception e){
+			return "NOTOK";
+		}
+	}
+	
+	@RequestMapping(value = "/evaluarProblemaJSON", method = {RequestMethod.GET, RequestMethod.POST})
+	@ResponseBody
+	public String evaluarProblemaJSON(@RequestBody final String notaJSON) {
+		String result = "";
+		NotaProblemRest notaProblemRest = new NotaProblemRest();
+		String notaJSONReplaced = notaJSON.replace("'", "\"");
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		try{
+			notaProblemRest = objectMapper.readValue(notaJSONReplaced, NotaProblemRest.class);
+		}catch(JsonParseException jpe){
+			jpe.printStackTrace();
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		try{
+			Integer idCorreccion = wolfMathsService.correctProblem(notaProblemRest);
+			return "OK: "+idCorreccion;
+		}catch(Exception e){
+			return "NOTOK";
+		}
 	}
 
 }

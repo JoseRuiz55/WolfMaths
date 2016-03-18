@@ -8,6 +8,8 @@ public class ProblemForm {
 	private boolean hayVarsSel;
 	private boolean hayStepsSel;
 	private boolean readyToSaveProblem;
+	private boolean readyToResolveProblem;
+	private boolean readyToGradeProblem;
 	private String action;
 	private VariablesNumberOptionsForm variablesNumberOptionsForm;
 	
@@ -16,6 +18,8 @@ public class ProblemForm {
 		this.hayVarsSel = false;
 		this.hayStepsSel = false;
 		this.readyToSaveProblem = false;
+		this.readyToResolveProblem = false;
+		this.readyToGradeProblem = false;
 		this.action = "";
 		this.variablesNumberOptionsForm=new VariablesNumberOptionsForm();
 	}
@@ -66,6 +70,22 @@ public class ProblemForm {
 
 	public void setVariablesNumberOptionsForm(VariablesNumberOptionsForm variablesNumberOptionsForm) {
 		this.variablesNumberOptionsForm = variablesNumberOptionsForm;
+	}
+
+	public boolean isReadyToResolveProblem() {
+		return readyToResolveProblem;
+	}
+
+	public void setReadyToResolveProblem(boolean readyToResolveProblem) {
+		this.readyToResolveProblem = readyToResolveProblem;
+	}
+
+	public boolean isReadyToGradeProblem() {
+		return readyToGradeProblem;
+	}
+
+	public void setReadyToGradeProblem(boolean readyToGradeProblem) {
+		this.readyToGradeProblem = readyToGradeProblem;
 	}
 
 	@Override

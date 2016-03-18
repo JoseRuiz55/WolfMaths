@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,7 +39,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "WomaProfesor.findByUsername", query = "SELECT w FROM WomaProfesor w WHERE w.username = :username"),
     @NamedQuery(name = "WomaProfesor.findByPassword", query = "SELECT w FROM WomaProfesor w WHERE w.password = :password"),
     @NamedQuery(name = "WomaProfesor.findByEmail", query = "SELECT w FROM WomaProfesor w WHERE w.email = :email"),
-    @NamedQuery(name = "WomaProfesor.findByTelefono", query = "SELECT w FROM WomaProfesor w WHERE w.telefono = :telefono")})
+    @NamedQuery(name = "WomaProfesor.findByTelefono", query = "SELECT w FROM WomaProfesor w WHERE w.telefono = :telefono"),
+    @NamedQuery(name = "WomaProfesor.findByUsernameAndPassword", query = "SELECT w FROM WomaProfesor w WHERE w.username = :username and w.password = :password")})
 public class WomaProfesor implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,6 +59,7 @@ public class WomaProfesor implements Serializable {
     @Column(name = "APELLIDO2")
     private String apellido2;
     @Size(max = 20)
+    @Basic(optional = false)
     @Column(name = "USERNAME")
     private String username;
     @Size(max = 20)
@@ -69,11 +72,11 @@ public class WomaProfesor implements Serializable {
     @Size(max = 11)
     @Column(name = "TELEFONO")
     private String telefono;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaProfesorId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaProfesorId")
     private List<WomaProblema> womaProblemaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaProfesorId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaProfesorId")
     private List<WomaProfAsig> womaProfAsigList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaProfesorId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaProfesorId")
     private List<WomaSolucionProblema> womaSolucionProblemaList;
 
     public WomaProfesor() {

@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -53,9 +54,9 @@ public class WomaIntentoProblema implements Serializable {
     @Size(max = 2000)
     @Column(name = "COMENTARIO")
     private String comentario;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaIntentoProblemaId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaIntentoProblemaId")
     private List<WomaPasoResolucionProblema> womaPasoResolucionProblemaList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "womaIntentoProblemaId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaIntentoProblemaId")
     private List<WomaSolucionProblema> womaSolucionProblemaList;
     @JoinColumn(name = "WOMA_VARIABLES_PROBLEMA_ID", referencedColumnName = "ID_VARIABLES_PROBLEMA")
     @ManyToOne(optional = false)

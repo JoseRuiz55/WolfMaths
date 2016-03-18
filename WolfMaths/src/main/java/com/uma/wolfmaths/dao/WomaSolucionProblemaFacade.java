@@ -5,8 +5,16 @@
  */
 package com.uma.wolfmaths.dao;
 
+import com.uma.wolfmaths.entity.WomaAlumno;
+import com.uma.wolfmaths.entity.WomaProblema;
 import com.uma.wolfmaths.entity.WomaSolucionProblema;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -19,6 +27,8 @@ public class WomaSolucionProblemaFacade extends AbstractFacade<WomaSolucionProbl
 
     @PersistenceContext
     private EntityManager em;
+    
+    private static final Logger logger = LoggerFactory.getLogger(WomaSolucionProblema.class);
 
     @Override
     protected EntityManager getEntityManager() {
@@ -27,6 +37,18 @@ public class WomaSolucionProblemaFacade extends AbstractFacade<WomaSolucionProbl
 
     public WomaSolucionProblemaFacade() {
         super(WomaSolucionProblema.class);
+    }
+    
+    public List<WomaSolucionProblema> getListaWomaSolucionProblemaAlumnos(WomaProblema womaProblema){
+
+    	javax.persistence.Query q = getEntityManager().createNamedQuery("WomaSolucionProblema.getSolucionProblemaAlum", WomaSolucionProblema.class).setParameter("womaProblema", womaProblema);
+    	List<WomaSolucionProblema> listaWomaSolucionProblema = q.getResultList();
+    	if(listaWomaSolucionProblema.isEmpty()){
+    		logger.info("Alumno no encontrado");
+
+    	}
+    	
+    	return listaWomaSolucionProblema;
     }
     
 }

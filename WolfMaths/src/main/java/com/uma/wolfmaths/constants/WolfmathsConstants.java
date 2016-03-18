@@ -12,4 +12,18 @@ public final class WolfmathsConstants {
 	public static final String APP_VARIABLE_Z = "varZ";
 	public static final String APP_VARIABLE_K = "varK";
 	public static final Integer MAX_STUDENT_SUBJECT = 20;
+	
+	public static final String USER_SESSION = "userSession";
+	public static final String ROLE_SESSION = "roleSession";
+	public static final String ALUM_ROLE = "A";
+	public static final String PROF_ROLE = "P";
+	public static final String LOGED_SESSION = "logedSession";
+	
+	public static final String VIEWS_PROBLEM_NEWPROBLEMFORM = "problem/newProblemForm";
+	public static final String VIEWS_HOME = "/home";
+	public static final String VIEWS_HEADER = "/header";
+	public static final String VIEWS_APPLICATION_USERMAINPAGE = "/application/userMainPage";
+	
+	
+	public static final String CONTROLLER_HOMECONTROLLER_MAIN = "/";
 }
