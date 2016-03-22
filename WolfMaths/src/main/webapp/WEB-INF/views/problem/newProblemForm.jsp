@@ -19,6 +19,7 @@
 <spring:url value="/problem/readyToSaveProblem" var="url_readyToSaveProblem"/>
 <spring:url value="/problem/guardarProblema" var="url_guardarProblema"/>
 <spring:url value="/problem/resolverProblema" var="url_resolverProblema"/>
+<spring:url value="/profesor/obtenerProblemasProfesor" var="url_ObtenerProblemasProfesor"/>
 <spring:url value="/problemRest/guardarProblemaJSON" var="url_guardarProblemaJSON"/>
 <spring:url value="/problemRest/resolverProblemaJSON" var="url_resolverProblemaJSON"/>
 
@@ -32,32 +33,38 @@
 <c:set var="readOnlyVars" value="false"/>
 
 <c:set var="urlActionProblemForm" value =""/>
-<c:if test="${problemForm.action eq INICIO}">
+<c:if test="${problemForm.action == 'INICIO'}">
 	<c:set var="urlActionProblemForm" value="${url_selVarsNumber}" />
 </c:if>
-<c:if test="${problemForm.action eq VARSSELECCIONADAS}">
+<c:if test="${problemForm.action == 'VARSSELECCIONADAS'}">
+	<c:set var="hiddenVisibility" value="hidden"/>
 	<c:set var="urlActionProblemForm" value="${url_selStepsNumber}" />
 </c:if>
-<c:if test="${problemForm.action eq STEPSSELECCIONADOS}">
+<c:if test="${problemForm.action == 'STEPSSELECCIONADOS'}">
+	<c:set var="hiddenVisibility" value="hidden"/>
 	<c:set var="urlActionProblemForm" value="${url_readyToSaveProblem}" />
 	<c:set var="readOnlyVars" value="true"/>
 	<c:set var="readOnlyVarsClass" value="readonlyVars"/>
+	
 </c:if>
 
-<c:if test="${problemForm.action eq READYTOSAVEPROBLEM}">
+<c:if test="${problemForm.action == 'READYTOSAVEPROBLEM'}">
+	<c:set var="hiddenVisibility" value="hidden"/>
 	<c:set var="urlActionProblemForm" value="${url_guardarProblema}" />
 	<c:set var="readOnlyVars" value="true"/>
 	<c:set var="readOnlyVarsClass" value="readonlyVars"/>
 </c:if>
 
-<c:if test="${problemForm.action eq READYTORESOLVEPROBLEM}">
+<c:if test="${problemForm.action == 'READYTORESOLVEPROBLEM'}">
+	<c:set var="hiddenVisibility" value="hidden"/>
 	<c:set var="urlActionProblemForm" value="${url_resolverProblema}" />
 	<c:set var="readOnlyVars" value="true"/>
 	<c:set var="readOnlyVarsClass" value="readonlyVars"/>
 </c:if>
 
-<c:if test="${problemForm.action eq READYTOGRADEPROBLEM}">
-	<c:set var="urlActionProblemForm" value="${url_resolverProblema}" />
+<c:if test="${problemForm.action == 'READYTOGRADEPROBLEM'}">
+	<c:set var="hiddenVisibility" value="hidden"/>
+	<c:set var="urlActionProblemForm" value="${url_ObtenerProblemasProfesor}" />
 	<c:set var="readOnlyVars" value="true"/>
 	<c:set var="readOnlyVarsClass" value="readonlyVars"/>
 </c:if>
@@ -71,17 +78,19 @@
 	<form:input type="hidden" path="hayStepsSel" value="${problemForm.hayStepsSel}"/>
 	<form:input type="hidden" path="problem.idProblemResolucion" value="${problemForm.problem.idProblemResolucion}"/>
 	<!-- <form:input type="hidden" path="problem.profesor" value="${problemForm.problem.profesor}"/>-->
-	<div id="initialDivTables">
+	<br>
+	<br>
+	<div id="initialDivTables" class="well divInitialTables">
 		<table id="tableProblem" style="height:200px;width:45%;float:left;">
 			<tr>
-				<td>Enunciado Problema</td>
+				<td><h1>Enunciado Problema</h1></td>
 			</tr>
 			<tr>
-				<td><form:textarea id="textAreaEnunciado" name="textAreaEnunciado" path="problem.statement" rows="4" cols="50"></form:textarea></td>
+				<td><form:textarea id="textAreaEnunciado" name="textAreaEnunciado" path="problem.statement" rows="4" cols="50" class="form-control textAreaEnunciadoProblema"></form:textarea></td>
 			</tr>
 			
 		</table>
-		<div id="divTableActions" style="overflow:scroll;height:200px;width:45%;float:rigth;">
+		<div id="divTableActions" style="overflow:scroll;height:200px;width:45%;float:rigth;display:none;">
 		<table id="tableActions" >
 			<tr>
 				<td>Acciones realizadas</td>
@@ -89,17 +98,26 @@
 		</table>
 		</div>
 	</div>
-	<table id="tableSelectNumVariables">
+	<table id="tableSelectNumVariables" class="tableSelectNumVars">
 	<tr>
-				<td>Número de Variables</td>
+				<td><h1>Número de Variables</h1></td>
 			</tr>
 			<tr>
 				<td>
-						<form:select id="selectVariables" path="problem.numVars" items="${problemForm.variablesNumberOptionsForm.opcionesSelect}">
+						<c:if test="${problemForm.action == 'INICIO'}">
+						<form:select id="selectVariables" path="problem.numVars" items="${problemForm.variablesNumberOptionsForm.opcionesSelect}" style="" class="form-control selectNumVars ">
 						</form:select>
+						</c:if>
+						<c:if test="${problemForm.action != 'INICIO'}">
+						<form:input type="hidden" id="selectVariables" path="problem.numVars" style="" class="form-control selectNumVars "/>
+						<select id="selectVariables" class="form-control selectNumVars " disabled="true">
+						<option selected="selected">${problemForm.problem.numVars }</option>
+						</select>
+						</c:if>
+						<br>
 						<input id="inputNumVariables" name="inputNumVariables" type="hidden" value=""/>
 						<c:if test="${problemForm.action == 'INICIO'}">
-							<input id="buttonSetNumVariables" name="buttonSetNumVariables" type="button" onclick="createVariablesTable()" value="Generar Variables"/>
+							<a class="btn btn-info btn-lg" onclick="createVariablesTable()"><span class="glyphicon glyphicon-list"></span> Generar Variables</a>
 						</c:if>
 				</td>
 			</tr>
@@ -108,8 +126,17 @@
 			</tr>
 	</table>
 	<c:if test="${problemForm.hayVarsSel}">
-		<div id="divVariables" style="padding-left: 0">
-		<table id="tableVariables">
+		<div id="divVariables" style="padding-left: 0" >
+		<table id="tableVariables" class="well tablesProblemForm">
+		<thead>
+			<tr id="trNombreVariable">
+			<td><label class="col-sm-2 form-control-label marginForm labelsThVariablesTable">Variable</label></td>
+			<td><label class="col-sm-2 form-control-label marginForm labelsThVariablesTable">Valor Inicial</label></td>
+			<td class="separatorTd"></td>
+			<td><label class="col-sm-2 form-control-label marginForm labelsThVariablesTable">Valor en paso Actual</label></td>
+			</tr>
+		</thead>
+		</tbody>
 			<c:forEach varStatus="loopVars" items="${problemForm.variablesNumberOptionsForm.opcionesSelect}" end="${problemForm.problem.numVars-1}">
 			<c:if test="${loopVars.index eq 0}">
 				<c:set var="nameVarLoop" value="x"/>
@@ -124,31 +151,42 @@
 				<c:set var="nameVarLoop" value="k"/>
 			</c:if>
 				<tr>
-						<td>${nameVarLoop}=</td>
-						<td><form:input id="inputInitialVar${fn:toUpperCase(nameVarLoop)}" name="inputInitialVar${fn:toUpperCase(nameVarLoop)}" path="problem.variables.${nameVarLoop}" class="${readOnlyVarsClass}" readonly="${readOnlyVars }"></form:input></td>
-						
-						<td><input id="inputVar${fn:toUpperCase(nameVarLoop)}" name="inputVar${fn:toUpperCase(nameVarLoop)}" readonly></input></td>
+						<td><label class="col-sm-2 form-control-label">       ${fn:toUpperCase(nameVarLoop)}</label></td>
+						<td><form:input id="inputInitialVar${fn:toUpperCase(nameVarLoop)}" name="inputInitialVar${fn:toUpperCase(nameVarLoop)}" path="problem.variables.${nameVarLoop}" class="${readOnlyVarsClass} form-control marginForm inputSteps" readonly="${readOnlyVars }"></form:input></td>
+						<td class="separatorTd"></td>
+						<td><input id="inputVar${fn:toUpperCase(nameVarLoop)}" name="inputVar${fn:toUpperCase(nameVarLoop)}" class="form-control marginForm inputSteps" readonly></input></td>
 						
 				</tr>
+				<tr class="emptyTrProblemForm"></tr>
+				<br>
 			</c:forEach>
+			<br>
 				<tr>
-						<td>Resultado=</td>
-						<td><form:input id="inputVarResultado" name="inputVarResultado" path="problem.result" readonly="true"></form:input></td>
+						<td><label class="col-sm-2 form-control-label">Resultado=</label></td>
+						<td><form:input id="inputVarResultado" name="inputVarResultado" path="problem.result" readonly="true" class="form-control marginForm inputSteps"></form:input></td>
 				</tr>
-				
+				</tbody>
 		</table>
 		<br/>
 		<div id="divEnunciadoVariables">
-		<label>Número de Paso de Resolucion a Implementar</label>
+		<h1>Número de Paso de Resolucion a Implementar</h1>
+		<br>
 		<label>
-			<form:select id="selectResolutionSteps" name="selectResolutionSteps" path="problem.numSteps" items="${problemForm.variablesNumberOptionsForm.opcionesSelect}">
+			<c:if test="${!problemForm.hayStepsSel}">
+			<form:select id="selectResolutionSteps" name="selectResolutionSteps" path="problem.numSteps" items="${problemForm.variablesNumberOptionsForm.opcionesSelect}" class="form-control selectNumVars" >
 			</form:select>
-			<td>
-				<input id="inputResolutionSteps" name="inputResolutionSteps" type="hidden" value=""/>
+			</c:if>
+			<c:if test="${problemForm.hayStepsSel}">
+			<form:input type="hidden" path="problem.numSteps"/>
+			<select id="selectResolutionSteps" name="selectResolutionSteps" class="form-control selectNumVars" disabled="true">
+				<option value="${problemForm.problem.numSteps }" selected="selected">${problemForm.problem.numSteps }</option>
+			</select>
+			<br>
+			</c:if>
+				<input id="inputResolutionSteps" name="inputResolutionSteps" type="hidden" value="" />
 				<c:if test="${!problemForm.hayStepsSel}">
-				<input type="button" onclick="createResolutionStepsTable()" value="Generar Pasos de Resolucion"/>
+				<a onclick="createResolutionStepsTable()" class="btn btn-primary btn-lg"><span class="glyphicon glyphicon-tasks"></span> Generar Pasos de Resolucion</a>
 				</c:if>
-			</td>
 			</label>
 		</div>
 		<br/>
@@ -156,50 +194,83 @@
 	</c:if>
 	<c:if test="${problemForm.hayStepsSel}">
 		<div id="divResolutionSteps" >
-			<table id="tableResolutionSteps">
+			<table id="tableResolutionSteps" class="well tablesProblemForm">
+				<thead>
+				<tr id="trNombreVariable">
+				<td><label class="col-sm-2 form-control-label marginForm labelsThVariablesTable"></label></td>
+				<td><label class="col-sm-2 form-control-label marginForm labelsThVariablesTable">Sentencia</label></td>
+				<td><label class="col-sm-2 form-control-label marginForm labelsThVariablesTable">Acción</label></td>
+				</tr>
+			</thead>
+			<tbody>
 				<c:forEach varStatus="loopSteps" items="${problemForm.variablesNumberOptionsForm.opcionesSelect}" end="${problemForm.problem.numSteps-1}">
 					<tr>
-						<td>Paso Número ${loopSteps.index+1}: </td>
-						<td><form:input id="inputStep${loopSteps.index+1}" name="inputStep${loopSteps.index+1}" path="problem.steps.step${loopSteps.index+1}.step"></form:input></td>
+						<td><label class="col-sm-2 form-control-label labelsThVariablesTable">Paso Número ${loopSteps.index+1}: </label></td>
+						<td><form:input id="inputStep${loopSteps.index+1}" name="inputStep${loopSteps.index+1}" path="problem.steps.step${loopSteps.index+1}.step" class="form-control inputSteps"></form:input></td>
 						<c:if test="${not problemForm.readyToGradeProblem}">
-						<td><input type="button" id="stepButton${loopSteps.index+1}" value="Ejecutar Paso" onclick="readStepExecution(${loopSteps.index+1})"></input></td>
+						<td><a id="stepButton${loopSteps.index+1}" onclick="readStepExecution(${loopSteps.index+1})" class="btn btn-warning btn-lg marginForm inputSteps"><span class="glyphicon glyphicon-console"></span> Ejecutar Paso</a></td>
 						</c:if>
 					</tr>
+					<tr class="emptyTrProblemForm"></tr>
+					<br>
 				</c:forEach>
 				<tr>
-				<td>Resolución Final: </td><td><form:input id="inputStepResultado" name="inputStepResultado" path="problem.steps.finalStep.step"></form:input></td>
-				<td>
+				<td><label class="col-sm-2 form-control-label labelsThVariablesTable">Resolución Final: </label></td><td><form:input id="inputStepResultado" name="inputStepResultado" path="problem.steps.finalStep.step" class="form-control inputSteps"></form:input></td>
 				<c:if test="${not problemForm.readyToGradeProblem}">
-				<input id="resolutionButton" type="button" value="Ejecutar Resolucion" onclick="ejecutarResolucion()"></input>
-				</c:if>
+				<td>
+				<a onclick="ejecutarResolucion()" class="btn btn-warning btn-lg marginForm inputSteps"><span class="glyphicon glyphicon-circle-arrow-right"></span> Ejecutar Resolucion</a>
 				</td>
 				
+				</c:if>
+				<br>
 				</tr>
+				</tbody>
 			</table>
 			<br/>
 		</div>
 	</c:if>
 	<div id="divConfirmarCreacionProblema" >
 	<c:if test="${problemForm.readyToSaveProblem}">
-		<input type="button" id="saveProblem" onclick="saveProblemSubmitJSON()" value="Guardar Problema"></input>
+		<br>
+		<br>
+		<br>
+		<a onclick="saveProblemSubmitJSON()" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-save"></span> Guardar Problema</a>
+		<input type="button" id="saveProblem" onclick="saveProblemSubmitJSON()" value="Guardar Problema" class="btn btn-secondary"></input>
 	</c:if>
 	</div>
 	
 	<div id="divConfirmarResolucionProblema" >
 	<c:if test="${problemForm.readyToResolveProblem}">
-		<input type="button" id="resolveProblem" onclick="resolveProblemSubmitJSON()" value="Resolver Problema"></input>
+		<br>
+		<br>
+		<br>
+		<a onclick="resolveProblemSubmitJSON()" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-circle-arrow-right"></span> Enviar Solucion</a>
+		<input type="button" id="resolveProblem" onclick="resolveProblemSubmitJSON()" value="Resolver Problema" class="btn btn-secondary"></input>
 	</c:if>
 	</div>
 	<div id="divNotaProblema" >
 	<c:if test="${problemForm.readyToGradeProblem}">
-		<input id="idNotaInput" name="idNotaInput"></input>
-		<input id="idComentarioNotaInput" name="idComentarioNotaInput"></input>
-		<input type="button" id="saveProblem" onclick="gradeProblemSubmitJSON()" value="Corregir Problema"></input>
+		<input type="hidden" id="idProblemResolucion" name="idProblemResolucion" value="${problemForm.problem.idProblemResolucion}" class="btn btn-secondary">
+		<h1>Evaluar Problema</h1>
+		<form>
+		  <fieldset class="form-group">
+		    <label for="formGroupExampleInput">Nota Problema</label>
+		    <input id="idNotaInput" name="idNotaInput" class="form-control marginForm inputSteps"></input>
+		  </fieldset>
+		  <fieldset class="form-group">
+		    <label for="formGroupExampleInput2">Comentario Problema</label>
+		    <input id="idComentarioNotaInput" name="idComentarioNotaInput" class="form-control marginForm inputSteps"></input>
+		  </fieldset>
+		  <fieldset class="form-group">
+		  <a onclick="gradeProblemSubmitJSON()" class="btn btn-success btn-lg"><span class="glyphicon glyphicon-book"></span> Guardar Corrección</a>
+		  <input type="button" id="saveProblem" onclick="gradeProblemSubmitJSON()" value="Corregir Problema" class="btn btn-secondary"></input>
+		  </fieldset>
+		</form>
 	</c:if>
 	</div>
 	</form:form>
 	</div>
-	
+	<jsp:include page="/WEB-INF/views/footer.jsp" />
 </body>
 <script>
 
@@ -423,18 +494,11 @@
 		$.ajax({  
 		     type : "POST",   
 		     url : "/wolfmaths/problemRest/evaluarProblemaJSON",
-		     data : "{'idProblemResolucion':'"+${problemForm.problem.idProblemResolucion}+"','nota':'"+$('#idNotaInput').val()+"','comentario':'"+$('#idComentarioNotaInput').val()+"'}",
+		     data : "{'idProblemResolucion':'"+$('#idProblemResolucion').val()+"','nota':'"+$('#idNotaInput').val()+"','comentario':'"+$('#idComentarioNotaInput').val()+"'}",
 		     contentType: "application/json",
 		     success : function(response) {
 		    	 
-		   	 alert("Problema Evaluado");
-		   	 $.ajax({
-		            type: "GET",
-		            url: "/wolfmaths/profesor/obtenerResolucionesAlumnosProblema/"+${problemForm.problem.idProblemResolucion},
-		            success: function( response ){
-		                //do something
-		            }
-		        });
+		     document.getElementById("newProblemForm").submit();
 		       
 		     },  
 		     error : function(e) {  

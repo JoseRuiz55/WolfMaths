@@ -26,4 +26,8 @@ public final class WolfmathsConstants {
 	
 	
 	public static final String CONTROLLER_HOMECONTROLLER_MAIN = "/";
+	
+	public static final String NOTA_AUTOCALCULADA_MISMO_RESULTADO = "10";
+	public static final String NOTA_AUTOCALCULADA_DISTINTO_RESULTADO = "0";
+	public static final String NOTA_AUTOCALCULADA_COMENTARIO_DEFAULT = "NOTA AUTOCALCULADA";
 }

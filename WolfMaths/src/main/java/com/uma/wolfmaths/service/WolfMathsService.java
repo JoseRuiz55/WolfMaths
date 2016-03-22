@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import com.uma.wolfmaths.constants.WolfmathsConstants;
 import com.uma.wolfmaths.dao.*;
 import com.uma.wolfmaths.dto.*;
 import com.uma.wolfmaths.entity.*;
@@ -274,6 +275,7 @@ public class WolfMathsService {
 				problemaProfesor.setId(listaWomaProblema.get(i).getIdProb());
 				problemaProfesor.setIdString(listaWomaProblema.get(i).getIdProb().toString());
 				problemaProfesor.setResumen(listaWomaProblema.get(i).getEnunciado());
+				problemaProfesor.setAsignatura(Mapper.mapWomaAsignaturaToAsignaturaDto(listaWomaProblema.get(i).getWomaAsignaturaId(), problemaProfesor.getAsignatura()));
 				List<WomaSolucionProblema> listaResolucionesAlumnos = womaSolucionProblemaFacade.getListaWomaSolucionProblemaAlumnos(listaWomaProblema.get(i));
 				problemaProfesor.setNumeroResolucionesAlumnos(listaResolucionesAlumnos.size());
 				listaProblemaProfesor.add(problemaProfesor);
@@ -300,7 +302,7 @@ public class WolfMathsService {
 		}
 		
 		solucionProblemaAlumno.setAlumno(Mapper.mapWomaAlumnoToAlumnoDto(womaSolucionProblema.getWomaAlumnoId(), solucionProblemaAlumno.getAlumno()));
-		
+		solucionProblemaAlumno.setIdProblema(womaSolucionProblema.getWomaProblemaId().getIdProb());
 		return solucionProblemaAlumno;
 	}
 	
@@ -334,5 +336,36 @@ public class WolfMathsService {
 		
 		return womaCorreccion.getIdCorr();
 		
+	}
+
+	public Integer autoCorregirProblema(String idResolucion) {
+		WomaCorreccion womaCorreccion = new WomaCorreccion();
+		List<WomaSolucionProblema> listaWomaSolucionProblemaProfesor = womaSolucionProblemaFacade.getSolucionProfesorByIdSolucionAlumno(Integer.parseInt(idResolucion));
+		
+		if(listaWomaSolucionProblemaProfesor.size()>1){
+			logger.error("Se han recuperado varias soluciones finales para un mismo problema, ERROR, se recuperará la última");
+		}
+		String solucionTotalProfesor = listaWomaSolucionProblemaProfesor.get(listaWomaSolucionProblemaProfesor.size()-1).getSolucionTotal();
+		
+		
+		WomaSolucionProblema womaSolucionProblemaAlumno = womaSolucionProblemaFacade.find(Integer.parseInt(idResolucion));
+		String solucionTotalAlumno = womaSolucionProblemaAlumno.getSolucionTotal();
+		
+		Double solucionProfesor = Double.parseDouble(solucionTotalProfesor);
+		Double solucionAlumno = Double.parseDouble(solucionTotalAlumno);
+		
+		if(solucionProfesor == solucionAlumno){
+			womaCorreccion.setNota(WolfmathsConstants.NOTA_AUTOCALCULADA_MISMO_RESULTADO);
+			womaCorreccion.setComentario(WolfmathsConstants.NOTA_AUTOCALCULADA_COMENTARIO_DEFAULT);
+			womaCorreccion.setWomaSolucionProblemaId(womaSolucionProblemaAlumno);
+		}else{
+			womaCorreccion.setNota(WolfmathsConstants.NOTA_AUTOCALCULADA_DISTINTO_RESULTADO);
+			womaCorreccion.setComentario(WolfmathsConstants.NOTA_AUTOCALCULADA_COMENTARIO_DEFAULT);
+			womaCorreccion.setWomaSolucionProblemaId(womaSolucionProblemaAlumno);
+		}
+		womaCorreccionFacade.create(womaCorreccion);
+		logger.info("Correccion creada con ID:"+womaCorreccion.getIdCorr());
+		
+		return womaCorreccion.getIdCorr();
 	}
 }

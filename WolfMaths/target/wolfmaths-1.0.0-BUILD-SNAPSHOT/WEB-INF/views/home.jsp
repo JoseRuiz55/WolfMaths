@@ -13,16 +13,25 @@
 	<spring:url value="/sessionController/login" var="url_LoginForm"/>
 </head>
 <body>
-<h1>
-	Bienvenido a la aplicación WolfMaths 
-</h1>
 
-<P>  The time on the server is ${serverTime}. </P>
-<p> Por favor, logueese para poder empezar a usar la aplicación</p>
-<form:form id="homePage" name="homePage" modelAttribute="sessionForm" action="${url_LoginForm}" method="post">
-<form:input id="userNameLogin" name="userNameLogin" path="userNameLogin"/>
-<form:password id="passwordLogin" name="passwordLogin" path="passwordLogin" />
-<form:button type="submit">Validar</form:button>
-</form:form>
+
+<div class="container">
+
+      <form:form id="homePage" name="homePage" modelAttribute="sessionForm" action="${url_LoginForm}" method="post" class="form-signin">
+        <h1 class="form-signin-heading" style="text-align: center;">¡BIENVENIDO A WOLFMATHS!</h1>
+        <h2 class="form-signin-heading">Por favor, identifiquese</h2>
+        <label for="userNameLogin" class="sr-only">Username</label>
+        <form:input id="userNameLogin" name="userNameLogin" path="userNameLogin" class="form-control" placeholder="Username" required="" autofocus=""/>
+        <label for="passwordLogin" class="sr-only">Password</label>
+        <form:password id="passwordLogin" name="passwordLogin" path="passwordLogin" class="form-control" placeholder="Password" required=""/>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Recordar
+          </label>
+        </div>
+        <form:button class="btn btn-lg btn-primary btn-block" type="submit">Log In</form:button>
+      </form:form>
+
+</div>
 </body>
 </html>

@@ -48,10 +48,10 @@ public class WomaCorreccionFacade extends AbstractFacade<WomaCorreccion> {
     		logger.info("Correccion no encontrada");
 
     	}else if(!listaWomaCorreccion.isEmpty() && listaWomaCorreccion.size()!=1){
-    		logger.error("Dos Correcciones leidas en BBDD. ERROR EN BBDD. Recuperamos el primero");
-    		womaCorreccion = listaWomaCorreccion.get(0);
+    		logger.error("Dos Correcciones leidas en BBDD. ERROR EN BBDD. Recuperamos el último");
+    		womaCorreccion = listaWomaCorreccion.get(listaWomaCorreccion.size()-1);
     	}else{
-    		womaCorreccion = listaWomaCorreccion.get(0);
+    		womaCorreccion = listaWomaCorreccion.get(listaWomaCorreccion.size()-1);
     	}
     	
     	return womaCorreccion;

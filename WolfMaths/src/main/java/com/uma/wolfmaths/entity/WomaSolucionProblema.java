@@ -39,7 +39,13 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "WomaSolucionProblema.findByPasosResolucion", query = "SELECT w FROM WomaSolucionProblema w WHERE w.pasosResolucion = :pasosResolucion"),
     @NamedQuery(name = "WomaSolucionProblema.findByComentario", query = "SELECT w FROM WomaSolucionProblema w WHERE w.comentario = :comentario"),
     @NamedQuery(name = "WomaSolucionProblema.findByTipoSolucion", query = "SELECT w FROM WomaSolucionProblema w WHERE w.tipoSolucion = :tipoSolucion"),
-    @NamedQuery(name = "WomaSolucionProblema.getSolucionProblemaAlum", query = "SELECT w FROM WomaSolucionProblema w WHERE w.womaProfesorId = null AND w.womaProblemaId = :womaProblema")})
+    @NamedQuery(name = "WomaSolucionProblema.getSolucionProblemaAlum", query = "SELECT w FROM WomaSolucionProblema w WHERE w.womaProfesorId = null AND w.womaProblemaId = :womaProblema"),
+    @NamedQuery(name = "WomaSolucionProblema.getSolucionProfesorByIdSolucionAlumno", 
+    query = "select wsp2 from WomaSolucionProblema wsp2 where wsp2.womaProblemaId "+
+    "= (select wsp1.womaProblemaId from WomaSolucionProblema wsp1 where wsp1.idSoluProb = :idSolucionAlumno) and wsp2.womaProfesorId is not null")})
+
+
+
 public class WomaSolucionProblema implements Serializable {
 
     private static final long serialVersionUID = 1L;

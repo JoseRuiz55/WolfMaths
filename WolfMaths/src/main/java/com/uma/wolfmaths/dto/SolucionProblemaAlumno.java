@@ -4,11 +4,13 @@ public class SolucionProblemaAlumno {
 	private Alumno alumno;
 	private Correccion correccion;
 	private ProblemaCorreccionAlumno problemaCorreccion;
+	private Integer idProblema;
 	
 	public SolucionProblemaAlumno(){
 		this.alumno = new Alumno();
 		this.correccion = new Correccion();
 		this.problemaCorreccion = new ProblemaCorreccionAlumno();
+		this.idProblema = null;
 	}
 
 	public Alumno getAlumno() {
@@ -33,6 +35,22 @@ public class SolucionProblemaAlumno {
 
 	public void setProblemaCorreccionAlumno(ProblemaCorreccionAlumno problemaCorreccion) {
 		this.problemaCorreccion = problemaCorreccion;
+	}
+
+	public ProblemaCorreccionAlumno getProblemaCorreccion() {
+		return problemaCorreccion;
+	}
+
+	public void setProblemaCorreccion(ProblemaCorreccionAlumno problemaCorreccion) {
+		this.problemaCorreccion = problemaCorreccion;
+	}
+
+	public Integer getIdProblema() {
+		return idProblema;
+	}
+
+	public void setIdProblema(Integer idProblema) {
+		this.idProblema = idProblema;
 	}
 	
 	

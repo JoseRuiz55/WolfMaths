@@ -36,6 +36,26 @@
 <span style="color: #094FA4; height: 16px; width: 16px;font-size: 15px;padding-top: 13px;">LISTA PROBLEMAS A RESOLVER</span>
 </a>
 </c:if>
-
+<c:if test="${roleSession eq 'P'}">
+	<div class="container marketing">
+	<div class="row">
+	        <div class="col-lg-4">
+	          <img class="img-circle" src="/wolfmaths/resourcesApl/images/problem_image.jpg" alt="Generic placeholder image" width="140" height="140">
+	          <h2>Crear Problema</h2>
+	          <p>Pulse en esta opción para crear un nuevo problema a los alumnos asociados a su asignatura</p>
+	          <p><a class="btn btn-secondary" href="${url_newProblemForm}" role="button">Crear Problema</a></p>
+	        </div><!-- /.col-lg-4 -->
+	        <div class="col-lg-4">
+	        </div>
+	        <div class="col-lg-4">
+	          <img class="img-circle" src="/wolfmaths/resourcesApl/images/resolve_problem.jpg" alt="Generic placeholder image" width="140" height="140">
+	          <h2>Corregir Soluciones Alumnos</h2>
+	          <p>Pulse en esta opción para poder acceder a un listado de los problemas que ha creado</p>
+	          <p><a class="btn btn-secondary" href="${url_getProblemasProfesor}" role="button">Corregir Soluciones Alumnos</a></p>
+	        </div><!-- /.col-lg-4 -->
+	      </div>
+	</div>
+</c:if>
+<jsp:include page="/WEB-INF/views/footer.jsp" />
 </body>
 </html>

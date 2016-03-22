@@ -180,7 +180,7 @@ public class Mapper {
 
 		// Compruebo que soy un profesor
 		if (womaAlumno == null || intentoAlumno==null) {
-			problem.setComment(womaProblema.getEnunciado());
+			problem.setStatement(womaProblema.getEnunciado());
 			problem.setNumVars(womaProblema.getNumVariables());
 
 			List<WomaSolucionProblema> listaWomaSolucionProblema = womaProblema.getWomaSolucionProblemaList();
@@ -208,7 +208,7 @@ public class Mapper {
 		problem.setIdProblemResolucion(womaSolucionProblema.getIdSoluProb().toString());
 		problem.setNumSteps(womaSolucionProblema.getPasosResolucion());
 		problem.setResult(Double.valueOf(womaSolucionProblema.getSolucionTotal()));
-		// problem.setComment(womaSolucionProblema.getComentario());
+		problem.setComment(womaSolucionProblema.getComentario());
 
 		WomaIntentoProblema womaIntentoProblema = womaSolucionProblema.getWomaIntentoProblemaId();
 
@@ -219,7 +219,7 @@ public class Mapper {
 
 	public static Problem setWomaIntentoProblemaToProblemDto(Problem problem, WomaIntentoProblema womaIntentoProblema) {
 
-		problem.setComment(womaIntentoProblema.getComentario());
+		//problem.setComment(womaIntentoProblema.getComentario());
 		problem.setNumVars(womaIntentoProblema.getNumVariables());
 
 		problem.setVariables(

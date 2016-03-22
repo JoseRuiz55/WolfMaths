@@ -51,4 +51,19 @@ public class WomaSolucionProblemaFacade extends AbstractFacade<WomaSolucionProbl
     	return listaWomaSolucionProblema;
     }
     
+    public List<WomaSolucionProblema> getSolucionProfesorByIdSolucionAlumno(Integer idSolucionProblemaAlumno){
+
+    	javax.persistence.Query q = getEntityManager().createNamedQuery("WomaSolucionProblema.getSolucionProfesorByIdSolucionAlumno", WomaSolucionProblema.class).setParameter("idSolucionAlumno", idSolucionProblemaAlumno);
+    	List<WomaSolucionProblema> listaWomaSolucionProblema = q.getResultList();
+    	if(listaWomaSolucionProblema.isEmpty()){
+    		logger.error("No se ha encontrado la solucion del profesor, ERROR EN LA QUERY");
+    	}else if(listaWomaSolucionProblema.size()>1){
+    		logger.error("Mas de una solución de profesor encontrada, ERROR EN LA QUERY O EN LA BBDD");
+    	}
+    	
+    	return listaWomaSolucionProblema;
+    }
+    
+    
+    
 }

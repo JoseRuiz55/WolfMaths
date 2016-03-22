@@ -21,6 +21,7 @@
 
 <form:form id="problemasProfesorForm" name="problemasProfesorForm" modelAttribute="problemasProfesorForm">
 <c:forEach items="${problemasProfesorForm.listaProblemaProfesor}" var="problemaProfesor">
+<div>
 <p>ID : ${problemaProfesor.id}</p>
 <p>Nombre Asignatura : ${problemaProfesor.asignatura.nombre}</p>
 <p>Numero de Alumnos que han realizado el problema : ${problemaProfesor.numeroResolucionesAlumnos}</p>
@@ -31,8 +32,118 @@
 </div>
 </c:forEach>
 
+<div class="row">
+            <div class=" col-xs-12 col-sm-12 col-md-8 col-md-offset-2 col-lg-8 col-lg-offset-2">
+                <div class="db-wrapper">
+                    <div class="db-pricing-nine">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th style="color:black; vertical-align: middle;">Nombre Asignatura</th>
+                                        <th style="color:black; vertical-align: middle;">Departamento</th>
+                                        <th style="color:black; vertical-align: middle;" class="">Soluciones</th>
+                                        <th style="color:black; vertical-align: middle;" class="">Resumen Tarea</th>
+                                        <th style="color:black; vertical-align: middle;" class="">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                	<c:forEach items="${problemasProfesorForm.listaProblemaProfesor}" var="problemaProfesor">
+									 <tr>
+                                        <td style="vertical-align: middle;" class="db-width-perticular">${problemaProfesor.asignatura.nombre}</td>
+                                        <td style="vertical-align: middle;"  class="db-width-perticular">${problemaProfesor.asignatura.departamento}</td>
+                                        <td style="vertical-align: middle;" >${problemaProfesor.numeroResolucionesAlumnos}</td>
+                                        <td style="vertical-align: middle;" >${problemaProfesor.resumen}</td>
+                                        <td style="vertical-align: middle;" ><a href="${url_getResolucionesAlumnosProblema}/${problemaProfesor.id}" class="btn db-button-color-three">Corregir pendientes</a></td>
+                                    </tr>
+									</c:forEach>
+                                    <tr>
+                                        <td class="db-width-perticular">20 GB Hard Disk Included</td>
+                                        <td>N/A</td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="db-width-perticular">120 TB Bandwidth</td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td>N/A</td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="db-width-perticular">Dedicated Support Panel</td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-remove icon-red"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="db-width-perticular">Extra Plugin Features</td>
+                                        <td><i class="glyphicon glyphicon-remove icon-red"></i></td>
+                                        <td><i class="glyphicon glyphicon-remove icon-red"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="db-width-perticular">E-mail Support</td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-remove icon-red"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="db-width-perticular">Chat Support Option</td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-remove icon-red"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="db-width-perticular">Dedicated Support Panel</td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-remove icon-red"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="db-width-perticular">Extra Plugin Features</td>
+                                        <td><i class="glyphicon glyphicon-remove icon-red"></i></td>
+                                        <td><i class="glyphicon glyphicon-remove icon-red"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="db-width-perticular">E-mail Support</td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-remove icon-red"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="db-width-perticular">Chat Support Option</td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                        <td><i class="glyphicon glyphicon-remove icon-red"></i></td>
+                                        <td><i class="glyphicon glyphicon-ok icon-green"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="db-width-perticular"></td>
+                                        <td><a href="#" class="btn db-button-color-one">BUY PLAN</a> </td>
+                                        <td><a href="#" class="btn db-button-color-two">BUY PLAN</a> </td>
+                                        <td><a href="#" class="btn db-button-color-three">BUY PLAN</a> </td>
+                                        <td><a href="#" class="btn db-button-color-three">BUY PLAN</a> </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
 </form:form>
-
+<jsp:include page="/WEB-INF/views/footer.jsp" />
 </body>
 </html>

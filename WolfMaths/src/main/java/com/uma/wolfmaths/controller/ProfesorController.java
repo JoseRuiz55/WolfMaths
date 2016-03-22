@@ -36,7 +36,7 @@ public class ProfesorController {
 	@Autowired
 	private WolfMathsService wolfMathsService;
 	
-	@RequestMapping(value = "/obtenerProblemasProfesor", method = RequestMethod.GET)
+	@RequestMapping(value = "/obtenerProblemasProfesor", method = { RequestMethod.POST, RequestMethod.GET })
 	public String obtenerProblemasProfesor(Locale locale, final Map<String, Object> model, final HttpServletRequest request) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		
@@ -66,6 +66,20 @@ public class ProfesorController {
 		//wolfMathsService.readProblem(problemForm, womaProblema, womaAlumno, womaProfesor, intentoAlumno)
 		ProblemasProfesorForm problemasProfesorForm = new ProblemasProfesorForm();
 		WomaProblema womaProblema = wolfMathsService.getWomaProblemaByIdProblema(Integer.parseInt(id));
+		List<SolucionProblemaAlumno> listaSolucionProblemaAlumno = wolfMathsService.getListaProblemaCorreccionAlumno(womaProblema);
+		problemasProfesorForm.setListaSolucionProblemaAlumno(listaSolucionProblemaAlumno);
+		model.put("problemasProfesorForm", problemasProfesorForm);
+		
+		return "profesor/listadoSolucionesAlumnos";
+	}
+	
+	@RequestMapping(value = "autoCorregir/{idProblema}/{idResolucion}", method = { RequestMethod.POST, RequestMethod.GET })
+	public String autoCorregir(final @PathVariable("idProblema") String idProblema, final @PathVariable("idResolucion") String idResolucion,final Map<String, Object> model, final HttpServletRequest request) {
+		
+		Integer idNota = wolfMathsService.autoCorregirProblema(idResolucion);
+		logger.info("Corrección creada con ID: "+idNota);
+		ProblemasProfesorForm problemasProfesorForm = new ProblemasProfesorForm();
+		WomaProblema womaProblema = wolfMathsService.getWomaProblemaByIdProblema(Integer.parseInt(idProblema));
 		List<SolucionProblemaAlumno> listaSolucionProblemaAlumno = wolfMathsService.getListaProblemaCorreccionAlumno(womaProblema);
 		problemasProfesorForm.setListaSolucionProblemaAlumno(listaSolucionProblemaAlumno);
 		model.put("problemasProfesorForm", problemasProfesorForm);

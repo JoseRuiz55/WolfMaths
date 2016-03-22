@@ -61,11 +61,11 @@ public class SessionController {
 				Profesor profesor = wolfMathsService.checkUsernamePasswordWomaProfesor(username, password);
 				session.setAttribute(WolfmathsConstants.ROLE_SESSION, WolfmathsConstants.PROF_ROLE);
 				session.setAttribute(WolfmathsConstants.USER_SESSION, profesor);
+				session.setAttribute(WolfmathsConstants.LOGED_SESSION, true);
 				sessionForm.setRolSeleccionado(WolfmathsConstants.PROF_ROLE);
 				sessionForm.setProfesor(profesor);
 				sessionForm.setUserNameLogin(profesor.getUsername());
 				sessionForm.setLogueado(true);
-				
 			}
 			
 		}else{
