@@ -368,4 +368,32 @@ public class WolfMathsService {
 		
 		return womaCorreccion.getIdCorr();
 	}
+
+	public List<CorreccionProblemaAlumno> getCalificacionesAlumno(Alumno alumno) {
+		List<CorreccionProblemaAlumno> listaCalificacionesAlumno = new ArrayList<CorreccionProblemaAlumno>();
+		
+		
+		WomaAlumno womaAlumno = womaAlumnoFacade.find(alumno.getId());
+		List<WomaSolucionProblema> listaWomaSolucionProblemaAlumno = womaSolucionProblemaFacade.getSolucionesAlumnoByAlumno(womaAlumno);
+		for(int i=0;i<listaWomaSolucionProblemaAlumno.size();i++){
+			WomaSolucionProblema womaSolucionProblema = listaWomaSolucionProblemaAlumno.get(i);
+			CorreccionProblemaAlumno correccionProblemaAlumno = Mapper.mapWomaSolucionProblemaToCorreccionProblemaAlumno(womaSolucionProblema);
+			listaCalificacionesAlumno.add(correccionProblemaAlumno);
+		}
+		
+		return listaCalificacionesAlumno;
+	}
+
+	public List<Correccion> getHistoricoNotas(String idProblema) {
+		WomaSolucionProblema womaSolucionProblema = womaSolucionProblemaFacade.find(Integer.parseInt(idProblema));
+		List<WomaCorreccion> listaWomaCorreccion = womaCorreccionFacade.findListCorrecionesByWomaSolucionProblema(womaSolucionProblema);
+		List<Correccion> listaHistorico = new ArrayList<Correccion>();
+		for(int i=0;i<listaWomaCorreccion.size();i++){
+			Correccion correccion = new Correccion();
+			correccion = Mapper.mapWomaCorrecionToCorrecionDto(listaWomaCorreccion.get(i), correccion);
+			listaHistorico.add(correccion);
+		}
+		
+		return listaHistorico;
+	}
 }

@@ -365,4 +365,16 @@ public class Mapper {
 		return correccion;
 	}
 
+	public static CorreccionProblemaAlumno mapWomaSolucionProblemaToCorreccionProblemaAlumno(
+			WomaSolucionProblema womaSolucionProblema) {
+		CorreccionProblemaAlumno correccionProblemaAlumno = new CorreccionProblemaAlumno();
+		correccionProblemaAlumno.setEnunciado(womaSolucionProblema.getWomaProblemaId().getEnunciado());
+		correccionProblemaAlumno.setCorreccion(Mapper.mapWomaCorrecionToCorrecionDto(womaSolucionProblema.getWomaCorreccionList().get(womaSolucionProblema.getWomaCorreccionList().size()-1),correccionProblemaAlumno.getCorreccion()));
+		correccionProblemaAlumno.setProblemaCorreccionAlumno(Mapper.mapWomaSolucionProblemaToProblemaCorreccionAlumno(womaSolucionProblema,correccionProblemaAlumno.getProblemaCorreccionAlumno()));
+		correccionProblemaAlumno.setAsignatura(Mapper.mapWomaAsignaturaToAsignaturaDto(womaSolucionProblema.getWomaProblemaId().getWomaAsignaturaId(), correccionProblemaAlumno.getAsignatura()));
+		correccionProblemaAlumno.setProfesor(Mapper.mapWomaProfesorToProfesorDto(womaSolucionProblema.getWomaProblemaId().getWomaProfesorId(), correccionProblemaAlumno.getProfesor()));
+		
+		return correccionProblemaAlumno;
+	}
+
 }

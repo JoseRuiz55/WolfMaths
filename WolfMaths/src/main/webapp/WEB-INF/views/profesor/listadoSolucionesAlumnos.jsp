@@ -23,54 +23,6 @@
 
 </head>
 <body>
-
-	<p>SOLUCIONES ALUMNOS PROBLEMA BODY</p>
-
-
-	<div class="contTable">
-		<table id="tabla_listado_expedientes" cellspacing="0"
-			class="generic sortable">
-			<thead class="scrollHeader">
-				<tr>
-					<th class="txt-centrado" style="width: 100px;">Alumno</th>
-					<th class="txt-centrado" style="width: 100px;">Numero Pasos
-						Resolucion</th>
-					<th class="txt-centrado" style="width: 100px;">Resultado</th>
-					<th class="txt-centrado" style="width: 100px;">Nota</th>
-					<th class="txt-centrado" style="width: 100px;">Nota Comentario</th>
-				</tr>
-			</thead>
-			<tbody class="scrollContent">
-				<c:forEach var="problema"
-					items="${problemasProfesorForm.listaSolucionProblemaAlumno}"
-					varStatus="rowCounter">
-					<c:set var="myInteger" value="${myInteger+1}"></c:set>
-					<c:set var="rowStyle" scope="page" value="" />
-					<c:if test="${rowCounter.count % 2 == 0}">
-						<c:set var="rowStyle" scope="page" value="fondo_celda" />
-					</c:if>
-					<tr class="${rowStyle}" id="exp_${expediente.codigoExpediente}">
-
-						<td class="txt-centrado">
-							<p style="white-space: pre-wrap;">${problema.alumno.nombre}
-								${problema.alumno.apellido1}</p>
-						</td>
-						<td class="txt-centrado">
-							<p style="white-space: pre-wrap;">${problema.problemaCorreccionAlumno.pasosResolucion}</p>
-						</td>
-						<td class="txt-centrado">
-							<p style="white-space: pre-wrap;">${problema.problemaCorreccionAlumno.resultado}
-								- ${problema.problemaCorreccionAlumno.id}</p>
-						</td>
-						<th class="has-pretty-child"><label class="title1">${problema.correccion.nota}</label></th>
-						<td class="txt-centrado">
-							<p style="white-space: pre-wrap;">${problema.correccion.comentario}</p>
-						</td>
-					</tr>
-				</c:forEach>
-			</tbody>
-		</table>
-	</div>
 <div class="contTable">
 	<table class="table well">
 		<thead>

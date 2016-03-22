@@ -21,6 +21,8 @@ import com.uma.wolfmaths.constants.WolfmathsConstants;
 import com.uma.wolfmaths.dao.WomaAlumnoFacade;
 import com.uma.wolfmaths.dto.Alumno;
 import com.uma.wolfmaths.dto.Profesor;
+import com.uma.wolfmaths.form.ProblemForm;
+import com.uma.wolfmaths.form.RegistrationForm;
 import com.uma.wolfmaths.form.SessionForm;
 import com.uma.wolfmaths.service.WolfMathsService;
 
@@ -60,6 +62,15 @@ public class HomeController {
 			model.put("sessionForm", sessionForm);
 			return WolfmathsConstants.VIEWS_HOME;
 		}
+		
+
+	}
+	
+	@RequestMapping(value = "/registration", method = RequestMethod.GET)
+	public String registration(Locale locale, final Map<String, Object> model, final HttpServletRequest request) {
+		RegistrationForm registrationForm = new RegistrationForm();
+		model.put("registrationForm", registrationForm);
+		return "/application/registrationForm";
 		
 
 	}

@@ -26,6 +26,7 @@ import com.uma.wolfmaths.dto.Alumno;
 import com.uma.wolfmaths.dto.Problem;
 import com.uma.wolfmaths.dto.Profesor;
 import com.uma.wolfmaths.form.ProblemForm;
+import com.uma.wolfmaths.form.RegistrationForm;
 import com.uma.wolfmaths.form.SessionForm;
 import com.uma.wolfmaths.restcontroller.ProblemRestController;
 import com.uma.wolfmaths.service.WolfMathsService;
@@ -83,6 +84,14 @@ public class SessionController {
 	public String login(Locale locale,  final HttpServletRequest request) {
 		cleanSession(request);
 		return "redirect:"+WolfmathsConstants.CONTROLLER_HOMECONTROLLER_MAIN;
+
+	}
+	
+	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
+	public String registerUser(@ModelAttribute("registrationForm") final RegistrationForm registrationForm, final Map<String, Object> model, final HttpServletRequest request) {
+		model.put("registrationForm", registrationForm);
+		return "/application/registrationForm";
+		
 
 	}
 	

@@ -7,6 +7,7 @@ public class Profesor {
 	private String apellido1;
 	private String apellido2;
 	private String username;
+	private String password;
 	private String email;
 	private String telefono;
 	
@@ -17,6 +18,7 @@ public class Profesor {
 		this.apellido1="";
 		this.apellido2="";
 		this.username="";
+		this.password="";
 		this.email="";
 		this.telefono="";
 	}
@@ -53,6 +55,12 @@ public class Profesor {
 	}
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	public String getEmail() {
 		return email;

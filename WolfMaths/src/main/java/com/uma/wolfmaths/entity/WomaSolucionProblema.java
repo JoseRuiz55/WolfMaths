@@ -9,8 +9,10 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,6 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "WomaSolucionProblema.findByComentario", query = "SELECT w FROM WomaSolucionProblema w WHERE w.comentario = :comentario"),
     @NamedQuery(name = "WomaSolucionProblema.findByTipoSolucion", query = "SELECT w FROM WomaSolucionProblema w WHERE w.tipoSolucion = :tipoSolucion"),
     @NamedQuery(name = "WomaSolucionProblema.getSolucionProblemaAlum", query = "SELECT w FROM WomaSolucionProblema w WHERE w.womaProfesorId = null AND w.womaProblemaId = :womaProblema"),
+    @NamedQuery(name = "WomaSolucionProblema.getSolucionesAlumnoByAlumno", query = "SELECT w FROM WomaSolucionProblema w WHERE w.womaProfesorId = null AND w.womaAlumnoId = :alumno"),
     @NamedQuery(name = "WomaSolucionProblema.getSolucionProfesorByIdSolucionAlumno", 
     query = "select wsp2 from WomaSolucionProblema wsp2 where wsp2.womaProblemaId "+
     "= (select wsp1.womaProblemaId from WomaSolucionProblema wsp1 where wsp1.idSoluProb = :idSolucionAlumno) and wsp2.womaProfesorId is not null")})
@@ -77,7 +80,7 @@ public class WomaSolucionProblema implements Serializable {
     @JoinColumn(name = "WOMA_INTENTO_PROBLEMA_ID", referencedColumnName = "ID_INTE_PROB")
     @ManyToOne(optional = false)
     private WomaIntentoProblema womaIntentoProblemaId;
-    @OneToMany(mappedBy = "womaSolucionProblemaId")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "womaSolucionProblemaId")
     private List<WomaCorreccion> womaCorreccionList;
 
     public WomaSolucionProblema() {

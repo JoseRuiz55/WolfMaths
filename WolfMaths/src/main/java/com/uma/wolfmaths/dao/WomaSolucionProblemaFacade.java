@@ -63,6 +63,16 @@ public class WomaSolucionProblemaFacade extends AbstractFacade<WomaSolucionProbl
     	
     	return listaWomaSolucionProblema;
     }
+
+	public List<WomaSolucionProblema> getSolucionesAlumnoByAlumno(WomaAlumno womaAlumno) {
+		javax.persistence.Query q = getEntityManager().createNamedQuery("WomaSolucionProblema.getSolucionesAlumnoByAlumno", WomaSolucionProblema.class).setParameter("alumno", womaAlumno);
+    	List<WomaSolucionProblema> listaWomaSolucionProblema = q.getResultList();
+    	if(listaWomaSolucionProblema.isEmpty()){
+    		logger.info("No se han encontrado soluciones del alumno evaluadas");
+    	}
+    	
+    	return listaWomaSolucionProblema;
+	}
     
     
     

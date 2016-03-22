@@ -57,4 +57,18 @@ public class WomaCorreccionFacade extends AbstractFacade<WomaCorreccion> {
     	return womaCorreccion;
     }
     
+    public List<WomaCorreccion> findListCorrecionesByWomaSolucionProblema (WomaSolucionProblema womaSolucionProblema){
+    	
+    	WomaCorreccion womaCorreccion = null;
+    	javax.persistence.Query q = getEntityManager().createNamedQuery("WomaCorreccion.findByWomaSolucionProblema", WomaCorreccion.class).setParameter("womaSolucionProblemaId", womaSolucionProblema);
+    	List<WomaCorreccion> listaWomaCorreccion = q.getResultList();
+    	if(listaWomaCorreccion.isEmpty()){
+    		logger.info("No se han encontrado correcciones");
+
+    	}
+    	
+    	
+    	return listaWomaCorreccion;
+    }
+    
 }

@@ -6,6 +6,7 @@ public class CorreccionProblemaAlumno {
 	private Profesor profesor;
 	private Correccion correccion;
 	private ProblemaCorreccionAlumno problemaCorreccionAlumno;
+	private String enunciado;
 	
 	
 	public CorreccionProblemaAlumno(){
@@ -13,6 +14,7 @@ public class CorreccionProblemaAlumno {
 		this.profesor = new Profesor();
 		this.correccion = new Correccion();
 		this.problemaCorreccionAlumno = new ProblemaCorreccionAlumno();
+		this.enunciado = "";
 	}
 	
 	
@@ -40,11 +42,25 @@ public class CorreccionProblemaAlumno {
 	public void setProblemaCorreccionAlumno(ProblemaCorreccionAlumno problemaCorreccionAlumno) {
 		this.problemaCorreccionAlumno = problemaCorreccionAlumno;
 	}
+	public String getEnunciado() {
+		return enunciado;
+	}
+
+
+	public void setEnunciado(String enunciado) {
+		this.enunciado = enunciado;
+	}
+
+
 	@Override
 	public String toString() {
 		return "CorreccionProblemaAlumno [asignatura=" + asignatura + ", profesor=" + profesor + ", correccion="
-				+ correccion + ", problemaCorreccionAlumno=" + problemaCorreccionAlumno + "]";
+				+ correccion + ", problemaCorreccionAlumno=" + problemaCorreccionAlumno + ", enunciado=" + enunciado
+				+ "]";
 	}
+
+
+	
 	
 	
 

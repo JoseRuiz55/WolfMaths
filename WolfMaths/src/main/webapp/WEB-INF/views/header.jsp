@@ -67,6 +67,8 @@
 <spring:url value="/problem/createProblemForm" var="url_newProblemForm"/>
 <spring:url value="/problem/resolveProblemForm" var="url_resolveProblemForm"/>
 <spring:url value="/alumno/obtenerTareasAlumno" var="url_getTareasAlumno"/>
+<spring:url value="/alumno/consultarCalificaciones" var="url_getCalificacionesAlumno"/>
+
 <spring:url value="/profesor/obtenerProblemasProfesor" var="url_getProblemasProfesor"/>
 
 <!-- IMPORT CSS -->
@@ -133,7 +135,7 @@
 					</form>
 				</div>
 			</div>
-		</div>
+		</div>	
 </div>
  -->
  
@@ -148,7 +150,7 @@
       <ul>
          <li class='has-sub'><a href='${url_getTareasAlumno }'><span>Problemas a resolver</span></a>
          </li>
-         <li class='has-sub'><a href='#'><span>Consultar Notas</span></a>
+         <li class='has-sub'><a href='${url_getCalificacionesAlumno }'><span>Consultar Notas</span></a>
          </li>
       </ul>
    </li>
