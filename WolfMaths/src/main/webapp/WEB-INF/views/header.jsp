@@ -146,7 +146,7 @@
    <li class='active has-sub' style="visibility:hidden;"><a href='#'><span>NOLOG</span></a>
    </c:if>
    <c:if test="${logedSession and roleSession eq 'A'}">
-   <li class='active has-sub' style="visibility:${visibilityAlum};"><a href='#'><span>Alumno</span></a>
+   <li class='active has-sub' style="visibility:${visibilityAlum};"><a href='/wolfmaths/'><span>Alumno</span></a>
       <ul>
          <li class='has-sub'><a href='${url_getTareasAlumno }'><span>Problemas a resolver</span></a>
          </li>
@@ -156,7 +156,7 @@
    </li>
    </c:if>
    <c:if test="${logedSession and roleSession eq 'P'}">
-   <li class='active has-sub' style="visibility:${visibilityProf};"><a href='#'><span>Profesor</span></a>
+   <li class='active has-sub' style="visibility:${visibilityProf};"><a href='/wolfmaths/'><span>Profesor</span></a>
       <ul>
          <li class='has-sub'><a href='${url_newProblemForm}'><span>Crear Nuevo Problema</span></a>
          </li>

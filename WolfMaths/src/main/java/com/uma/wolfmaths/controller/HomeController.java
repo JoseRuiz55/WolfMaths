@@ -2,6 +2,7 @@ package com.uma.wolfmaths.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.uma.wolfmaths.constants.WolfmathsConstants;
 import com.uma.wolfmaths.dao.WomaAlumnoFacade;
 import com.uma.wolfmaths.dto.Alumno;
+import com.uma.wolfmaths.dto.Asignatura;
 import com.uma.wolfmaths.dto.Profesor;
 import com.uma.wolfmaths.form.ProblemForm;
 import com.uma.wolfmaths.form.RegistrationForm;
@@ -71,6 +73,19 @@ public class HomeController {
 		RegistrationForm registrationForm = new RegistrationForm();
 		model.put("registrationForm", registrationForm);
 		return "/application/registrationForm";
+		
+
+	}
+	
+	@RequestMapping(value = "/inscripcion", method = RequestMethod.GET)
+	public String inscripcion(Locale locale, final Map<String, Object> model, final HttpServletRequest request) {
+		RegistrationForm registrationForm = new RegistrationForm();
+		List<Asignatura> listaAsignaturas = wolfMathsService.getListaAsignaturas();
+		List<Profesor> listaProfesores = wolfMathsService.getListaProfesores();
+		registrationForm.setListaAsignaturas(listaAsignaturas);
+		registrationForm.setListaProfesores(listaProfesores);
+		model.put("registrationForm", registrationForm);
+		return "/application/inscriptionPage";
 		
 
 	}

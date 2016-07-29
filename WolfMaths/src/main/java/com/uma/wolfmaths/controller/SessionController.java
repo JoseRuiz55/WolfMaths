@@ -89,8 +89,10 @@ public class SessionController {
 	
 	@RequestMapping(value = "/registerUser", method = RequestMethod.POST)
 	public String registerUser(@ModelAttribute("registrationForm") final RegistrationForm registrationForm, final Map<String, Object> model, final HttpServletRequest request) {
-		model.put("registrationForm", registrationForm);
-		return "/application/registrationForm";
+		logger.info("Se va a proceder a la creación de un usuario");
+		logger.info("Datos del usuario: "+registrationForm.toString());
+		wolfMathsService.createNewUser(registrationForm);
+		return "/application/userMainPage";
 		
 
 	}

@@ -377,4 +377,36 @@ public class Mapper {
 		return correccionProblemaAlumno;
 	}
 
+	public static WomaProfesor mapProfesorDtoToWomaProfesor(WomaProfesor womaProfesor, Profesor profesor) {
+		
+		womaProfesor.setNombre(profesor.getNombre());
+		womaProfesor.setApellido1(profesor.getApellido1());
+		womaProfesor.setApellido2(profesor.getApellido2());
+		womaProfesor.setUsername(profesor.getUsername());
+		womaProfesor.setPassword(profesor.getPassword());
+		womaProfesor.setTelefono(profesor.getTelefono());
+		womaProfesor.setEmail(profesor.getEmail());
+		
+		return womaProfesor;
+	}
+
+	public static WomaAlumno mapProfesorDtoToWomaProfesor(WomaAlumno womaAlumno, Alumno alumno) {
+		womaAlumno.setNombre(alumno.getNombre());
+		womaAlumno.setApellido1(alumno.getApellido1());
+		womaAlumno.setApellido2(alumno.getApellido2());
+		womaAlumno.setUsername(alumno.getUsername());
+		womaAlumno.setPassword(alumno.getPassword());
+		womaAlumno.setTelefono(alumno.getTelefono());
+		womaAlumno.setEmail(alumno.getEmail());
+		
+		return womaAlumno;
+	}
+
+	public static WomaAsignatura mapAsignaturaDtoToAsignatura(WomaAsignatura womaAsignatura, Asignatura asignatura) {
+		womaAsignatura.setNombre(asignatura.getNombre());
+		womaAsignatura.setDepartamento(asignatura.getDepartamento());
+		womaAsignatura.setNumMaxAlum(asignatura.getMaxAlum());
+		return womaAsignatura;
+	}
+
 }

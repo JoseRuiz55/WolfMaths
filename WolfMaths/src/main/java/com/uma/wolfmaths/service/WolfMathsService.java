@@ -15,6 +15,7 @@ import com.uma.wolfmaths.dao.*;
 import com.uma.wolfmaths.dto.*;
 import com.uma.wolfmaths.entity.*;
 import com.uma.wolfmaths.form.ProblemForm;
+import com.uma.wolfmaths.form.RegistrationForm;
 import com.uma.wolfmaths.utils.Mapper;
 
 
@@ -395,5 +396,76 @@ public class WolfMathsService {
 		}
 		
 		return listaHistorico;
+	}
+
+	public Integer createNewUser(RegistrationForm registrationForm) {
+		Integer idUser = null;
+		if(registrationForm.getRol().equals(WolfmathsConstants.REGISTRATION_ROL_ADMINISTRADOR)){
+			
+			
+		}else if(registrationForm.getRol().equals(WolfmathsConstants.REGISTRATION_ROL_PROFESOR)){
+			WomaProfesor womaProfesor = new WomaProfesor();
+			womaProfesor = Mapper.mapProfesorDtoToWomaProfesor(womaProfesor,registrationForm.getProfesor());
+			womaProfesorFacade.create(womaProfesor);
+			idUser = womaProfesor.getIdProf();
+			
+		}else if(registrationForm.getRol().equals(WolfmathsConstants.REGISTRATION_ROL_ALUMNO)){
+			WomaAlumno womaAlumno = new WomaAlumno();
+			womaAlumno = Mapper.mapProfesorDtoToWomaProfesor(womaAlumno,registrationForm.getAlumno());
+			womaAlumnoFacade.create(womaAlumno);
+			idUser = womaAlumno.getIdAlum();
+			
+		}else{
+			logger.info("Error en los parametros de entrada");
+		}
+		return idUser;
+		
+	}
+
+	public List<Asignatura> getListaAsignaturas() {
+		List<Asignatura> listaAsignaturas = new ArrayList<Asignatura>();
+		List<WomaAsignatura> listaWomaAsignatura = womaAsignaturaFacade.findAll();
+		for(int i=0;i<listaWomaAsignatura.size();i++){
+			listaAsignaturas.add(Mapper.mapWomaAsignaturaToAsignaturaDto(listaWomaAsignatura.get(i), new Asignatura()));
+		}
+		return listaAsignaturas;
+	}
+
+	public List<Profesor> getListaProfesores() {
+		List<Profesor> listaProfesores = new ArrayList<Profesor>();
+		List<WomaProfesor> listaWomaProfesor = womaProfesorFacade.findAll();
+		for(int i=0;i<listaWomaProfesor.size();i++){
+			listaProfesores.add(Mapper.mapWomaProfesorToProfesorDto(listaWomaProfesor.get(i), new Profesor()));
+		}
+		
+		return listaProfesores;
+	}
+
+	public Integer createNewAsignatura(Asignatura asignatura) {
+		WomaAsignatura womaAsignatura = new WomaAsignatura();
+		womaAsignatura = Mapper.mapAsignaturaDtoToAsignatura(womaAsignatura, asignatura);
+		womaAsignaturaFacade.create(womaAsignatura);
+		
+		return womaAsignatura.getIdAsig();
+	}
+	
+	public Asignatura findAsignatura(Integer id) {
+		WomaAsignatura womaAsignatura = womaAsignaturaFacade.find(id);
+		Asignatura asignatura = Mapper.mapWomaAsignaturaToAsignaturaDto(womaAsignatura, new Asignatura());
+		
+		return asignatura;
+	}
+	
+	public Integer editAsignatura(Asignatura asignatura) {
+		WomaAsignatura womaAsignatura = womaAsignaturaFacade.find(asignatura.getId());
+		womaAsignatura = Mapper.mapAsignaturaDtoToAsignatura(womaAsignatura, asignatura);
+		womaAsignaturaFacade.edit(womaAsignatura);
+		
+		return womaAsignatura.getIdAsig();
+	}
+	
+	public void removeAsignatura(Integer idAsignatura) {
+		WomaAsignatura womaAsignatura = womaAsignaturaFacade.find(idAsignatura);
+		womaAsignaturaFacade.remove(womaAsignatura);
 	}
 }
