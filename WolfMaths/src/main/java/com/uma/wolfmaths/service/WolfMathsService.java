@@ -46,7 +46,7 @@ public class WolfMathsService {
 	protected WomaProblemaFacade womaProblemaFacade;
 
 	@Autowired
-	protected WomaProfAsigFacade womaProfAsigacade;
+	protected WomaProfAsigFacade womaProfAsigFacade;
 	
 	@Autowired
 	protected WomaProfesorFacade womaProfesorFacade;
@@ -411,7 +411,7 @@ public class WolfMathsService {
 			
 		}else if(registrationForm.getRol().equals(WolfmathsConstants.REGISTRATION_ROL_ALUMNO)){
 			WomaAlumno womaAlumno = new WomaAlumno();
-			womaAlumno = Mapper.mapProfesorDtoToWomaProfesor(womaAlumno,registrationForm.getAlumno());
+			womaAlumno = Mapper.mapAlumnoDtoToWomaAlumno(womaAlumno,registrationForm.getAlumno());
 			womaAlumnoFacade.create(womaAlumno);
 			idUser = womaAlumno.getIdAlum();
 			
@@ -443,7 +443,7 @@ public class WolfMathsService {
 
 	public Integer createNewAsignatura(Asignatura asignatura) {
 		WomaAsignatura womaAsignatura = new WomaAsignatura();
-		womaAsignatura = Mapper.mapAsignaturaDtoToAsignatura(womaAsignatura, asignatura);
+		womaAsignatura = Mapper.mapAsignaturaDtoToWomaAsignatura(womaAsignatura, asignatura);
 		womaAsignaturaFacade.create(womaAsignatura);
 		
 		return womaAsignatura.getIdAsig();
@@ -458,7 +458,7 @@ public class WolfMathsService {
 	
 	public Integer editAsignatura(Asignatura asignatura) {
 		WomaAsignatura womaAsignatura = womaAsignaturaFacade.find(asignatura.getId());
-		womaAsignatura = Mapper.mapAsignaturaDtoToAsignatura(womaAsignatura, asignatura);
+		womaAsignatura = Mapper.mapAsignaturaDtoToWomaAsignatura(womaAsignatura, asignatura);
 		womaAsignaturaFacade.edit(womaAsignatura);
 		
 		return womaAsignatura.getIdAsig();
@@ -468,4 +468,201 @@ public class WolfMathsService {
 		WomaAsignatura womaAsignatura = womaAsignaturaFacade.find(idAsignatura);
 		womaAsignaturaFacade.remove(womaAsignatura);
 	}
+	
+	public Integer asignarProfesorAAsignatura(Integer idProfesor, Integer idAsignatura){
+        WomaAsignatura womaAsignatura = womaAsignaturaFacade.find(idAsignatura);
+        WomaProfesor womaProfesor = womaProfesorFacade.find(idProfesor);
+        WomaProfAsig womaProfAsig = new WomaProfAsig();
+
+        womaProfAsig.setIdProfAsig(womaProfesor.getIdProf());
+        womaProfAsig.setWomaAsignaturaId(womaAsignatura);
+        womaProfAsigFacade.create(womaProfAsig);
+
+        logger.info("Relación establecida con ID: "+womaProfAsig.getIdProfAsig());
+        return womaProfAsig.getIdProfAsig();
+    }
+    
+    public void desasignarProfesorAAsignatura(Integer idProfesor, Integer idAsignatura){
+        WomaAsignatura womaAsignatura = womaAsignaturaFacade.find(idAsignatura);
+        WomaProfesor womaProfesor = womaProfesorFacade.find(idProfesor);
+
+        WomaProfAsig womaProfAsig = womaProfAsigFacade.findByAsigAndProf(womaAsignatura, womaProfesor);
+        womaProfAsigFacade.remove(womaProfAsig);
+
+        logger.info("Profesor con ID"+womaProfesor.getIdProf()+ " desasignado a la asignatura con ID"+womaAsignatura.getIdAsig());
+    }
+
+    public Integer asignarAlumnoAAsignatura(Integer idAlumno, Integer idAsignatura){
+        WomaAsignatura womaAsignatura = womaAsignaturaFacade.find(idAsignatura);
+        WomaAlumno womaAlumno = womaAlumnoFacade.find(idAlumno);
+        WomaAlumAsig womaAlumAsig = new WomaAlumAsig();
+
+        womaAlumAsig.setWomaAlumnoId(womaAlumno);
+        womaAlumAsig.setWomaAsignaturaId(womaAsignatura);
+        womaAlumAsigFacade.create(womaAlumAsig);
+
+        logger.info("Relación establecida con ID: "+womaAlumAsig.getIdAsumAsig());
+        return womaAlumAsig.getIdAsumAsig();
+    }
+    
+    public void desasignarAlumnoAAsignatura(Integer idAsignatura, Integer idAlumno){
+        WomaAsignatura womaAsignatura = womaAsignaturaFacade.find(idAsignatura);
+        WomaAlumno womaAlumno = womaAlumnoFacade.find(idAlumno);
+
+        WomaAlumAsig womaAlumAsig = womaAlumAsigFacade.findByAsigAndAlum(womaAsignatura, womaAlumno);
+        womaAlumAsigFacade.remove(womaAlumAsig);
+
+        logger.info("Alumno con ID"+womaAlumno.getIdAlum()+ " desasignado a la asignatura con ID"+womaAsignatura.getIdAsig());
+    }
+    
+    public List<InscripcionProfesor> recuperarAsignacionesProfesor(Integer idProfesor){
+        WomaProfesor womaProfesor = womaProfesorFacade.find(idProfesor);
+
+        List<WomaProfAsig> listaAsignaturasProfesor = womaProfAsigFacade.findByAsigAndProf(womaProfesor);
+        List<InscripcionProfesor> listaInscripcionesProfesorDto = new ArrayList<InscripcionProfesor>();
+        listaInscripcionesProfesorDto = Mapper.mapListaWomaProfAsigToListaInscripcionesProfesor(listaAsignaturasProfesor,listaInscripcionesProfesorDto);
+        return listaInscripcionesProfesorDto;
+        }
+
+    public List<InscripcionProfesor> getAsignaturasYRelacionesConProfesor(Integer idProfesor){
+        List<WomaAsignatura> listaWomaAsignatura = womaAsignaturaFacade.findAll();
+        WomaProfesor womaProfesor = womaProfesorFacade.find(idProfesor);
+        List<InscripcionProfesor> listaInscripcionesProfesorDto = recuperarAsignacionesProfesor(idProfesor);
+        for(WomaAsignatura womaAsignatura: listaWomaAsignatura){
+            boolean encontrado = false;
+            boolean fin = false;
+            int i = 0;
+            while(!encontrado && !fin){
+                
+                if(listaInscripcionesProfesorDto.get(i).getAsignatura().getId().equals(womaAsignatura.getIdAsig())){
+                    encontrado = true;
+                }
+                if(i==(listaInscripcionesProfesorDto.size()-1)){
+                    fin = true;
+                }
+                i++;
+            }
+
+            if(!encontrado){
+                listaInscripcionesProfesorDto.add(Mapper.mapWomaAsignaturaToInscripcionProfesorDesasignada(womaAsignatura, womaProfesor));
+            }
+
+        }
+        return listaInscripcionesProfesorDto;
+
+    }
+    
+    public void procesarListaAsignacionesProfesor(List<InscripcionProfesor> listaInscripcionesProfesorDto){
+        
+        for(InscripcionProfesor inscripcionProfesor:listaInscripcionesProfesorDto){
+            Integer accion = inscibirDesinscribirInscripcionProfesor(inscripcionProfesor);
+            if(accion==null){
+                logger.info("Relacion ya añadida y no ha cambiado "+inscripcionProfesor);
+            }else if(accion<0){
+                logger.info("Se ha borrado la relación: "+inscripcionProfesor);
+            }else{
+                logger.info("Se ha insertado la relacion: "+inscripcionProfesor+" con ID"+accion);
+            }
+        }
+    }
+
+    public Integer inscibirDesinscribirInscripcionProfesor(InscripcionProfesor inscripcionProfesor){
+        WomaProfAsig womaProfAsig = null;
+        Integer id = null;
+
+        if(inscripcionProfesor.getId()!=null && !inscripcionProfesor.isInscrito()){
+            womaProfAsig = womaProfAsigFacade.find(inscripcionProfesor.getId());
+            id = (-1)*womaProfAsig.getIdProfAsig();
+            womaProfAsigFacade.remove(womaProfAsig);
+        }else if(inscripcionProfesor.getId()!=null && inscripcionProfesor.isInscrito()){
+            logger.info("Profesor ya inscrito en la asignatura");
+
+        }else{
+            womaProfAsig = new WomaProfAsig();
+            womaProfAsig = Mapper.mapInscripcionProfesorDtoToWomaProfAsig(womaProfAsig, inscripcionProfesor);
+            womaProfAsigFacade.create(womaProfAsig);
+            id = womaProfAsig.getIdProfAsig();
+        }
+
+        return id;
+
+    }
+
+
+    public List<InscripcionAlumno> recuperarAsignacionesAlumno(Integer idAlumno){
+        WomaAlumno womaAlumno = womaAlumnoFacade.find(idAlumno);
+
+        List<WomaAlumAsig> listaAsignaturasAlumno = womaAlumAsigFacade.findByIdAlum(womaAlumno);
+        List<InscripcionAlumno> listaInscripcionesAlumnoDto = new ArrayList<InscripcionAlumno>();
+        listaInscripcionesAlumnoDto = Mapper.mapListaWomaAlumAsigToListaInscripcionesAlumno(listaAsignaturasAlumno,listaInscripcionesAlumnoDto);
+        return listaInscripcionesAlumnoDto;
+        }
+
+    public List<InscripcionAlumno> getAsignaturasYRelacionesConAlumno(Integer idAlumno){
+        List<WomaAsignatura> listaWomaAsignatura = womaAsignaturaFacade.findAll();
+        WomaAlumno womaAlumno = womaAlumnoFacade.find(idAlumno);
+        List<InscripcionAlumno> listaInscripcionesAlumnoDto = recuperarAsignacionesAlumno(idAlumno);
+        for(WomaAsignatura womaAsignatura: listaWomaAsignatura){
+            boolean encontrado = false;
+            boolean fin = false;
+            int i = 0;
+            while(!encontrado && !fin){
+                
+                if(listaInscripcionesAlumnoDto.get(i).getAsignatura().getId().equals(womaAsignatura.getIdAsig())){
+                    encontrado = true;
+                }
+                if(i==(listaInscripcionesAlumnoDto.size()-1)){
+                    fin = true;
+                }
+                i++;
+            }
+
+            if(!encontrado){
+                listaInscripcionesAlumnoDto.add(Mapper.mapWomaAsignaturaYWomaAlumnoToInscripcionAlumnoDesasignada(womaAsignatura, womaAlumno));
+            }
+
+        }
+        return listaInscripcionesAlumnoDto;
+
+    }
+
+
+    public void procesarListaAsignacionesAlumno(List<InscripcionAlumno> listaInscripcionesAlumnoDto){
+        
+        for(InscripcionAlumno inscripcionAlumno:listaInscripcionesAlumnoDto){
+            Integer accion = inscibirDesinscribirInscripcionAlumno(inscripcionAlumno);
+            if(accion==null){
+                logger.info("Relacion ya añadida y no ha cambiado "+inscripcionAlumno);
+            }else if(accion<0){
+                logger.info("Se ha borrado la relación: "+inscripcionAlumno);
+            }else{
+                logger.info("Se ha insertado la relacion: "+inscripcionAlumno+" con ID"+accion);
+            }
+        }
+    }
+
+    public Integer inscibirDesinscribirInscripcionAlumno(InscripcionAlumno inscripcionAlumno){
+        WomaAlumAsig womaAlumAsig = null;
+        Integer id = null;
+
+        if(inscripcionAlumno.getId()!=null && !inscripcionAlumno.isInscrito()){
+            womaAlumAsig = womaAlumAsigFacade.find(inscripcionAlumno.getId());
+            id = (-1)*womaAlumAsig.getIdAsumAsig();
+            womaAlumAsigFacade.remove(womaAlumAsig);
+        }else if(inscripcionAlumno.getId()!=null && inscripcionAlumno.isInscrito()){
+            logger.info("Alumno ya inscrito en la asignatura");
+
+        }else{
+            womaAlumAsig = new WomaAlumAsig();
+            womaAlumAsig = Mapper.mapInscripcionAlumnoDtoToWomaAlumAsig(womaAlumAsig, inscripcionAlumno);
+            womaAlumAsigFacade.create(womaAlumAsig);
+            id = womaAlumAsig.getIdAsumAsig();
+        }
+
+        return id;
+
+    }
+
+	
+	
 }

@@ -390,7 +390,7 @@ public class Mapper {
 		return womaProfesor;
 	}
 
-	public static WomaAlumno mapProfesorDtoToWomaProfesor(WomaAlumno womaAlumno, Alumno alumno) {
+	public static WomaAlumno mapAlumnoDtoToWomaAlumno(WomaAlumno womaAlumno, Alumno alumno) {
 		womaAlumno.setNombre(alumno.getNombre());
 		womaAlumno.setApellido1(alumno.getApellido1());
 		womaAlumno.setApellido2(alumno.getApellido2());
@@ -402,11 +402,127 @@ public class Mapper {
 		return womaAlumno;
 	}
 
-	public static WomaAsignatura mapAsignaturaDtoToAsignatura(WomaAsignatura womaAsignatura, Asignatura asignatura) {
+	public static WomaAsignatura mapAsignaturaDtoToWomaAsignatura(WomaAsignatura womaAsignatura, Asignatura asignatura) {
 		womaAsignatura.setNombre(asignatura.getNombre());
 		womaAsignatura.setDepartamento(asignatura.getDepartamento());
 		womaAsignatura.setNumMaxAlum(asignatura.getMaxAlum());
 		return womaAsignatura;
 	}
+	
+	public static List<InscripcionProfesor> mapListaWomaProfAsigToListaInscripcionesProfesor (List<WomaProfAsig> listaAsignaturasProfesor, List<InscripcionProfesor> listaInscripcionesProfesorDto){
+
+
+        for(int i=0;i<listaAsignaturasProfesor.size();i++){
+            WomaProfAsig womaProfAsig = listaAsignaturasProfesor.get(i);
+            InscripcionProfesor inscripcionProfesorDto = new InscripcionProfesor();
+            inscripcionProfesorDto = Mapper.mapWomaProfAsigToInscripcionProfesorDto(womaProfAsig,inscripcionProfesorDto);
+            listaInscripcionesProfesorDto.add(inscripcionProfesorDto);
+        }
+        return listaInscripcionesProfesorDto;
+    }
+    
+    public static InscripcionProfesor mapWomaProfAsigToInscripcionProfesorDto (WomaProfAsig womaProfAsig, InscripcionProfesor inscripcionProfesorDto){
+        Asignatura asignatura = new Asignatura();
+        asignatura = Mapper.mapWomaAsignaturaToAsignaturaDto(womaProfAsig.getWomaAsignaturaId(), asignatura);
+        Profesor profesor = new Profesor();
+        profesor = Mapper.mapWomaProfesorToProfesorDto(womaProfAsig.getWomaProfesorId(), profesor);
+        inscripcionProfesorDto.setId(womaProfAsig.getIdProfAsig());
+        inscripcionProfesorDto.setAsignatura(asignatura);
+        inscripcionProfesorDto.setProfesor(profesor);
+        inscripcionProfesorDto.setInscrito(true);
+
+        return inscripcionProfesorDto;
+    }
+    
+    public static InscripcionProfesor mapWomaAsignaturaToInscripcionProfesorDesasignada (WomaAsignatura womaAsignatura, WomaProfesor womaProfesor){
+        Asignatura asignatura = new Asignatura();
+        asignatura = Mapper.mapWomaAsignaturaToAsignaturaDto(womaAsignatura, asignatura);
+        Profesor profesor = new Profesor();
+        profesor = Mapper.mapWomaProfesorToProfesorDto(womaProfesor, profesor);
+        InscripcionProfesor inscripcionProfesorDto = new InscripcionProfesor();
+        inscripcionProfesorDto.setId(null);
+        inscripcionProfesorDto.setAsignatura(asignatura);
+        inscripcionProfesorDto.setProfesor(profesor);
+        inscripcionProfesorDto.setInscrito(false);
+
+        return inscripcionProfesorDto;
+    }
+
+    public static InscripcionProfesor mapWomaAsignaturaYWomaProfesorToInscripcionProfesorDesasignada (WomaAsignatura womaAsignatura, WomaProfesor womaProfesor){
+        Asignatura asignatura = new Asignatura();
+        asignatura = Mapper.mapWomaAsignaturaToAsignaturaDto(womaAsignatura, asignatura);
+        Profesor profesor = new Profesor();
+        profesor = Mapper.mapWomaProfesorToProfesorDto(womaProfesor, profesor);
+        InscripcionProfesor inscripcionProfesorDto = new InscripcionProfesor();
+        inscripcionProfesorDto.setId(null);
+        inscripcionProfesorDto.setAsignatura(asignatura);
+        inscripcionProfesorDto.setProfesor(profesor);
+        inscripcionProfesorDto.setInscrito(false);
+
+        return inscripcionProfesorDto;
+    }
+
+    public static WomaProfAsig mapInscripcionProfesorDtoToWomaProfAsig(WomaProfAsig womaProfAsig, InscripcionProfesor inscripcionProfesor){
+            WomaAsignatura womaAsignatura = new WomaAsignatura();
+            womaAsignatura = Mapper.mapAsignaturaDtoToWomaAsignatura(womaAsignatura, inscripcionProfesor.getAsignatura());
+            WomaProfesor womaProfesor = new WomaProfesor();
+            womaProfesor = Mapper.mapProfesorDtoToWomaProfesor(womaProfesor, inscripcionProfesor.getProfesor());
+            womaProfAsig.setWomaProfesorId(womaProfesor);
+            womaProfAsig.setWomaAsignaturaId(womaAsignatura);
+            return womaProfAsig;
+        }
+
+
+
+
+
+    public static List<InscripcionAlumno> mapListaWomaAlumAsigToListaInscripcionesAlumno (List<WomaAlumAsig> listaAsignaturasAlumno, List<InscripcionAlumno> listaInscripcionesAlumnoDto){
+
+
+        for(int i=0;i<listaAsignaturasAlumno.size();i++){
+            WomaAlumAsig womaAlumAsig = listaAsignaturasAlumno.get(i);
+            InscripcionAlumno inscripcionAlumnoDto = new InscripcionAlumno();
+            inscripcionAlumnoDto = Mapper.mapWomaAlumAsigToInscripcionAlumnoDto(womaAlumAsig,inscripcionAlumnoDto);
+            listaInscripcionesAlumnoDto.add(inscripcionAlumnoDto);
+        }
+        return listaInscripcionesAlumnoDto;
+    }
+    
+    public static InscripcionAlumno mapWomaAlumAsigToInscripcionAlumnoDto (WomaAlumAsig womaAlumAsig, InscripcionAlumno inscripcionAlumnoDto){
+        Asignatura asignatura = new Asignatura();
+        asignatura = Mapper.mapWomaAsignaturaToAsignaturaDto(womaAlumAsig.getWomaAsignaturaId(), asignatura);
+        Alumno alumno = new Alumno();
+        alumno = Mapper.mapWomaAlumnoToAlumnoDto(womaAlumAsig.getWomaAlumnoId(), alumno);
+        inscripcionAlumnoDto.setId(womaAlumAsig.getIdAsumAsig());
+        inscripcionAlumnoDto.setAsignatura(asignatura);
+        inscripcionAlumnoDto.setAlumno(alumno);
+        inscripcionAlumnoDto.setInscrito(true);
+
+        return inscripcionAlumnoDto;
+    }
+
+    public static InscripcionAlumno mapWomaAsignaturaYWomaAlumnoToInscripcionAlumnoDesasignada (WomaAsignatura womaAsignatura, WomaAlumno womaAlumno){
+        Asignatura asignatura = new Asignatura();
+        asignatura = Mapper.mapWomaAsignaturaToAsignaturaDto(womaAsignatura, asignatura);
+        Alumno alumno = new Alumno();
+        alumno = Mapper.mapWomaAlumnoToAlumnoDto(womaAlumno, alumno);
+        InscripcionAlumno inscripcionAlumnoDto = new InscripcionAlumno();
+        inscripcionAlumnoDto.setId(null);
+        inscripcionAlumnoDto.setAsignatura(asignatura);
+        inscripcionAlumnoDto.setAlumno(alumno);
+        inscripcionAlumnoDto.setInscrito(false);
+
+        return inscripcionAlumnoDto;
+    }
+
+    public static WomaAlumAsig mapInscripcionAlumnoDtoToWomaAlumAsig(WomaAlumAsig womaAlumAsig, InscripcionAlumno inscripcionAlumno){
+            WomaAsignatura womaAsignatura = new WomaAsignatura();
+            womaAsignatura = Mapper.mapAsignaturaDtoToWomaAsignatura(womaAsignatura, inscripcionAlumno.getAsignatura());
+            WomaAlumno womaAlumno = new WomaAlumno();
+            womaAlumno = Mapper.mapAlumnoDtoToWomaAlumno(womaAlumno, inscripcionAlumno.getAlumno());
+            womaAlumAsig.setWomaAlumnoId(womaAlumno);
+            womaAlumAsig.setWomaAsignaturaId(womaAsignatura);
+            return womaAlumAsig;
+        }
 
 }
